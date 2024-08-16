@@ -1,4 +1,4 @@
-import addNewMedicalRecord
+import functions as fn
 
 class Patient():
 
@@ -17,7 +17,13 @@ def menu():
         print("4- delete an existing medical record")
         print("5- exit")
 
-    choice = int(input("Enter your choice: "))
+        choice = int(input("Enter your choice: "))
 
-    if choice == 1:
-        addNewMedicalRecord
+        if choice == 1:
+            fn.addNewMedicalRecords()
+        else:
+            break
+
+
+
+menu()
