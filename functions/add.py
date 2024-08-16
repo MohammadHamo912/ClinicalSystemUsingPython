@@ -1,4 +1,4 @@
-
+patients ={}
 def addNewMedicalRecords():
     print("Enter the patient ID")
     patientID = int(input())
