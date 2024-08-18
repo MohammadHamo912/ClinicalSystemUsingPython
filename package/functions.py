@@ -6,6 +6,36 @@ medicalTests = []
 medicalRecords = []
 
 
+# main 5 tests
+
+
+def medicalTestsSetUP():
+    with open("medicalTest.txt", 'w') as file:
+        # Opening the file in write mode will clear its contents
+        pass
+
+    testHgb = mtClass("Hemoglobin", "Hgb", (13.8, 17.2), "g/dL", "00-03-04")
+    testHgb.addMedicalTest(testHgb.numberOfMedicalTests)
+
+    testBGT = mtClass("Blood Glucose Test", "BGT", (70, 99), "mg/dL", "00-12-06")
+    testBGT.addMedicalTest(testBGT.numberOfMedicalTests)
+    testLDL = mtClass("LDL Cholesterol Low-Density Lipoprotein", "LDL", (0, 100), "mg/dL", "00-17-06")
+    testLDL.addMedicalTest(testLDL.numberOfMedicalTests)
+    testsystole = mtClass("Systolic Blood Pressure", "systole", (0, 120), "mm Hg", "00-08-04")
+    testsystole.addMedicalTest(testsystole.numberOfMedicalTests)
+    testdiastole = mtClass("Diastolic Blood Pressure", "diastole", (0, 80), "mm Hg", "00-10-00")
+    testdiastole.addMedicalTest(testdiastole.numberOfMedicalTests)
+
+    listOfMainTests = [testHgb, testBGT, testLDL, testsystole, testdiastole]
+
+    for i in listOfMainTests:
+        medicalTests.append(i)
+
+
+# Usage
+medicalTestsSetUP()
+
+
 def addNewMedicalTest():
     print("Adding new medical test :")
     print("Enter the name of the medical test:")
@@ -36,13 +66,13 @@ def addNewMedicalTest():
 def addNewMedicalRecord():
     print("Enter the patient ID")
     patient_id = input()
-    while not validCheck.validPatientID(medicalTests,patient_id):
+    while not validCheck.validPatientID(patient_id):
         print("Wrong Patient ID, please try again")
         patient_id = input()
 
     print("Enter the test abbreviation")
     test_abbreviation = input()
-    while not validCheck.validTestAbbreviation(test_abbreviation):
+    while not validCheck.validTestAbbreviation(medicalTests, test_abbreviation):
         print("Wrong Test Abbreviation, please try again")
         test_abbreviation = input()
 
@@ -52,7 +82,7 @@ def addNewMedicalRecord():
         print("Wrong Date of Test, please try again")
         date = input()
 
-    print("Enter the medical record")
+    print("Enter your test result")
     result = input()
     while not validCheck.validResult(result):
         print("Wrong Medical Record, please try again")
@@ -60,7 +90,7 @@ def addNewMedicalRecord():
 
     print("Enter the record status")
     status = input()
-    while not validCheck.validResult(status):
+    while not validCheck.validStatus(status):
         print("Wrong Record Status, please try again")
         status = input()
 
@@ -68,7 +98,7 @@ def addNewMedicalRecord():
 
     medical_record = mrClass.MedicalRecord(patient_id, test_abbreviation, date, result, unit, status)
     medicalRecords.append(medical_record)
-    medical_record.writeToMedicalRecordtxt()
+    medical_record.addToMedicalRecord()
     # write into medicalRecord.txt print(patientID)
 
     print("Added Successfully")

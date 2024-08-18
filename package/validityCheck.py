@@ -60,13 +60,11 @@ def validDate(date):
 
     return True
 
-
+# this needs edit
 def validResult(result):
     for num in result:
         if not num.isdigit():
             return False
-    if result <= 0:
-        return False
     return True
 
 

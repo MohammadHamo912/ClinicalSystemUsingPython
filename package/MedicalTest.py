@@ -52,17 +52,3 @@ class MedicalTest:
         return self.test_range
 
 
-# writing the first 5 main tests
-
-
-testHgb = MedicalTest("Hemoglobin", "Hgb", (13.8, 17.2), "g/dL", "00-03-04")
-testHgb.addMedicalTest(testHgb.numberOfMedicalTests)
-
-testBGT = MedicalTest("Blood Glucose Test", "BGT", (70, 99), "mg/dL", "00-12-06")
-testBGT.addMedicalTest(testBGT.numberOfMedicalTests)
-testLDL = MedicalTest("LDL Cholesterol Low-Density Lipoprotein", "LDL", (0, 100), "mg/dL", "00-17-06")
-testLDL.addMedicalTest(testLDL.numberOfMedicalTests)
-testsystole = MedicalTest("Systolic Blood Pressure", "systole", (0, 120), "mm Hg", "00-08-04")
-testsystole.addMedicalTest(testsystole.numberOfMedicalTests)
-testdiastole = MedicalTest("Diastolic Blood Pressure", "diastole", (0, 80), "mm Hg", "00-10-00")
-testdiastole.addMedicalTest(testdiastole.numberOfMedicalTests)
