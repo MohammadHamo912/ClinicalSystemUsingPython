@@ -1,7 +1,5 @@
 class medicalRecord():
     records =[]
-    def __init__(self):
-        return
 
     def __init__(self, patientId, test, date, result, unit, status,resultDate = None):
         self.patientId = patientId

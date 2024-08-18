@@ -22,7 +22,7 @@ def upNormalResult(testResult, testName):
     openMedicalTest = open("medicalTest.txt", "r")
     for line in openMedicalTest:
         if testName in line: # 2. Name: Blood Glucose Test (BGT); Range: > 70, < 99; Unit: mg/dL, 00-12-06
-#                              3. Name: LDL Cholesterol Low-Density Lipoprotein (LDL); Range: < 100; Unit: mg/dL, 00-17-06
+                            # 3. Name: LDL Cholesterol Low-Density Lipoprotein (LDL); Range: < 100; Unit: mg/dL, 00-17-06
 
             parts = line.split(";")
             if len(parts) >= 2:
