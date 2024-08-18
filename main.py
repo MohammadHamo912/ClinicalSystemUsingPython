@@ -1,5 +1,6 @@
 import package as fn
 
+
 def menu():
     print("Welcome to The Clinical System")
     while True:
@@ -19,10 +20,19 @@ def menu():
         choice = int(input("Enter your choice: "))
 
         if choice == 1:
-            fn.addNewMedicalRecords()
+            fn.addNewMedicalRecord()
         elif choice == 2:
-            fn.addNewMeidcalTest()
-        elif choice == 3:
+            fn.addNewMedicalTest()
+
+        else:
+            break
+
+
+
+
+
+menu()
+'''  elif choice == 3:
             fn.updateMedicalRecords()
         elif choice == 4:
             fn.updateMeidcalTest()
@@ -42,10 +52,4 @@ def menu():
             fn.importMedicalRecords()
         elif choice == 0:
             break
-
-
-
-
-
-
-menu()
+    '''

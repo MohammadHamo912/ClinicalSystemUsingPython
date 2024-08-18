@@ -1,15 +1,15 @@
-import functions
-import medicalRecord as mR
-class Patient():
 
-
+class Patient:
+    patiensIDs = []
+    medicalRecords = []
     def __init__(self,id):
         self.id = id
-        self.medicalRecords = []
+        Patient.patiensIDs.append(id)
 
     def addPatientRecord(self):
-        medicalRecord = functions.addNewMedicalRecords()
-        self.medicalRecords.append(medicalRecord)
+        from ClinicalSystemUsingPython.package import functions
+        medicalRecord = functions.addNewMedicalRecord()
+        Patient.medicalRecords.append(medicalRecord)
 
     def updatePatientRecord(self, testName, updateData):
         for record in self.medicalRecords:
@@ -26,5 +26,6 @@ class Patient():
                 return record
         print("test Not found")
         return None
+
 
 

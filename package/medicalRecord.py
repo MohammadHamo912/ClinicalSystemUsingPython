@@ -1,36 +1,34 @@
-class medicalRecord():
-    records =[]
+# replace the test_abbreviation with the object test and show its abbreviation as an identity
 
-    def __init__(self, patientId, test, date, result, unit, status,resultDate = None):
-        self.patientId = patientId
-        self.test = test
+class MedicalRecord:
+    records = []
+
+    def __init__(self, patient_id, test_abbreviation, date, result, unit, status, result_date=None):
+        self.patient_id = patient_id
+        self.test_abbreviation = test_abbreviation
         self.date = date
         self.result = result
         self.unit = unit
         self.status = status
-        if resultDate != None:
-            self.resultDate = resultDate
+        if result_date is not None:
+            self.result_date = result_date
 
-    def updateRecord(self, testName=None, result=None, status=None, resultsDate=None):
-        if testName:
-            self.testName = testName
+    def updateRecord(self, test_abbreviation=None, result=None, status=None, result_date=None):
+        if test_abbreviation:
+            self.test_abbreviation = test_abbreviation
         if result:
             self.result = result
         if status:
             self.status = status
-        if resultsDate:
-            self.resultsDate = resultsDate
+        if result_date:
+            self.result_date = result_date
 
+    def writeToMedicalRecordtxt(self):
+        with open("/medicalRecord.txt", 'a') as file:
+            record = f"{self.patient_id}: {self.test_abbreviation}, {self.date}, {self.result}, {self.unit}, {self.status}"
+            if self.result_date:
+                record += f", {self.result_date}"
+            record += "\n"
+            file.write(record)
 
-    def addPatient(self,patient):
-        self.patient = patient
-
-
-    def addTest(self,test):
-        self.test = test
-
-    def addDate(self,date):
-        self.date = date
-
-    def addResult(self,result):
-        self.result = result
+        file.close()

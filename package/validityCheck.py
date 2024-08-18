@@ -1,18 +1,30 @@
-def validPatientID(patiendID):
-    if len(patiendID) != 7:
+def validPatientID(patientID):
+    if len(patientID) != 7:
         return False
-    for num in patiendID:
+    for num in patientID:
         if not num.isdigit():
             return False
     return True
 
 
 def validTestName(testName):
-    openMedicalTest=open("medicalTest.txt", "r")
-    for line in openMedicalTest:
-        if testName in line:
-            return True
+    from ClinicalSystemUsingPython.package import MedicalTest
+    for name in MedicalTest.MedicalTest.medicalTestNames:
+        if name == testName:
+           return True
     return False
+
+def validTestAbbreviation(testAbbreviation):
+    from ClinicalSystemUsingPython.package import MedicalTest
+    for abb in MedicalTest.MedicalTest.medicalTestsAbbreviation:
+        if abb == testAbbreviation:
+           return True
+    return False
+
+
+
+
+
 
 def upNormalResult(testResult, testName):
     if not validTestName():
@@ -64,3 +76,25 @@ def validDate(date):
 
     return True
 
+def validResult(result):
+    for num in result:
+        if not num.isdigit():
+            return False
+    if result <= 0:
+        return False
+    return True
+
+
+def validStatus(status):
+    if status == "Pending" or status == "Completed" or status == "Reviewed":
+        return True
+    return False
+
+
+
+def getUnit(medicalTests,testAbbreviation):
+    for test in medicalTests:
+        if testAbbreviation == test.getAbbreviation():
+            return test.getUnit()
+
+    return None

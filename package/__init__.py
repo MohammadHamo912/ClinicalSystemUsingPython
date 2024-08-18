@@ -1,7 +1,6 @@
-from .functions import *
 from .validityCheck import *
 from .medicalRecord import *
-from .medicalTest import *
-from .patient import *
+from .MedicalTest import *
 
-
+from .functions import addNewMedicalTest
+from .functions import addNewMedicalRecord
