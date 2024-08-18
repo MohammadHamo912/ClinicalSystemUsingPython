@@ -38,4 +38,3 @@ def deleteMedicalTest(self, testName):
     for line in lines:
         if not line.startswith(testName):
             writeMedicalTest.write(line)
-
