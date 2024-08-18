@@ -1,4 +1,3 @@
-from datetime import datetime
 def validPatientID(patiendID):
     if len(patiendID) != 7:
         return False
