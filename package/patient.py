@@ -1,15 +1,17 @@
-import medicalRecord
+import functions
+import medicalRecord as mR
 class Patient():
 
-    tests=[]
+
     def __init__(self,id):
         self.id = id
         self.medicalRecords = []
 
-    def addTest(self, record):
-        self.medicalRecords.append(record)
+    def addPatientRecord(self):
+        medicalRecord = functions.addNewMedicalRecords()
+        self.medicalRecords.append(medicalRecord)
 
-    def updateTest(self, testName, updateData):
+    def updatePatientRecord(self, testName, updateData):
         for record in self.medicalRecords:
             if record.testName == testName:
                 record.updateRecord(**updateData)
