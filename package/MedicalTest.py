@@ -6,9 +6,9 @@ class MedicalTest:
     def __init__(self, test_name, abbreviation, test_range, unit, time_to_be_completed):
         self.testName = test_name
         self.abbreviation = abbreviation
-        self.range = test_range
+        self.test_range = test_range
         self.unit = unit
-        self.addedDate = time_to_be_completed
+        self.time_to_be_completed = time_to_be_completed
         MedicalTest.numberOfMedicalTests += 1
         MedicalTest.medicalTestNames.append(test_name)
         MedicalTest.medicalTestAbbreviations.append(abbreviation)
@@ -16,10 +16,10 @@ class MedicalTest:
     def addMedicalTest(self, numberOfMedicalTests):
         open_medical_test_file = open("medicalTest.txt", "a")
         open_medical_test_file.write(
-            f"{numberOfMedicalTests}. Name: {self.testName} ({self.abbreviation}); Range: {self.range}; Unit: {self.unit}, {self.addedDate}\n")
+            f"{numberOfMedicalTests}. Name: {self.testName} ({self.abbreviation}); Range: {self.test_range}; Unit: {self.unit}, {self.time_to_be_completed}\n")
 
     def printMedicalTest(self):
-        print(self.testName, self.abbreviation, self.range, self.unit, self.addedDate)
+        print(self.testName, self.abbreviation, self.test_range, self.unit, self.time_to_be_completed)
 
     def updateMedicalTest(self, testName, newRange):
         read_medical_tests = open("medicalTest.txt", "r")
@@ -47,6 +47,9 @@ class MedicalTest:
 
     def getUnit(self):
         return self.unit
+
+    def getRange(self):
+        return self.test_range
 
 
 # writing the first 5 main tests

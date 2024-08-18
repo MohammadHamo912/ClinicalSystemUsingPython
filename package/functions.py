@@ -36,7 +36,7 @@ def addNewMedicalTest():
 def addNewMedicalRecord():
     print("Enter the patient ID")
     patient_id = input()
-    while not validCheck.validPatientID(patient_id):
+    while not validCheck.validPatientID(medicalTests,patient_id):
         print("Wrong Patient ID, please try again")
         patient_id = input()
 

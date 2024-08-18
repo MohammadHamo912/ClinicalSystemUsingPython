@@ -1,51 +1,35 @@
-def validPatientID(patientID):
-    if len(patientID) != 7:
+def validPatientID(patient_id):
+    if len(patient_id) != 7:
         return False
-    for num in patientID:
+    for num in patient_id:
         if not num.isdigit():
             return False
     return True
 
 
-def validTestName(testName):
-    from ClinicalSystemUsingPython.package import MedicalTest
-    for name in MedicalTest.MedicalTest.medicalTestNames:
-        if name == testName:
-           return True
-    return False
-
-def validTestAbbreviation(testAbbreviation):
-    from ClinicalSystemUsingPython.package import MedicalTest
-    for abb in MedicalTest.MedicalTest.medicalTestsAbbreviation:
-        if abb == testAbbreviation:
-           return True
+def validTestAbbreviation(medical_tests, abbreviation):
+    for abb in medical_tests:
+        if abb.getAbbreviation() == abbreviation:
+            return True
     return False
 
 
-
-
-
-
-def upNormalResult(testResult, testName):
-    if not validTestName():
+def upNormalResult(medical_tests, test_result, test_abbreviation):
+    if not validTestAbbreviation(medical_tests, test_abbreviation):
         print("Invalid test name")
         return
-    openMedicalTest = open("medicalTest.txt", "r")
-    for line in openMedicalTest:
-        if testName in line: # 2. Name: Blood Glucose Test (BGT); Range: > 70, < 99; Unit: mg/dL, 00-12-06
-                            # 3. Name: LDL Cholesterol Low-Density Lipoprotein (LDL); Range: < 100; Unit: mg/dL, 00-17-06
-
-            parts = line.split(";")
-            if len(parts) >= 2:
-                range_part = parts[1].strip().split(",")
-                minVal = float(range_part[0].strip().split("> ")[1])
-                maxVal = float(range_part[1].strip().split("< ")[1])
-            if testResult >= minVal and testResult <= maxVal:
+    open_medical_test = open("medicalTest.txt", "r")
+    for test in medical_tests:
+        if test_abbreviation == test.getAbbreviation:
+            # 2. Name: Blood Glucose Test (BGT); Range: > 70, < 99; Unit: mg/dL, 00-12-06
+            # 3. Name: LDL Cholesterol Low-Density Lipoprotein (LDL); Range: < 100; Unit: mg/dL, 00-17-06
+            test_range = test.getRange()
+            min_val = test_range[0]
+            max_val = test_range[1]
+            if min_val <= test_result <= max_val:
                 return False
             else:
                 return True
-
-
 
 
 def validDate(date):
@@ -76,6 +60,7 @@ def validDate(date):
 
     return True
 
+
 def validResult(result):
     for num in result:
         if not num.isdigit():
@@ -91,10 +76,9 @@ def validStatus(status):
     return False
 
 
-
-def getUnit(medicalTests,testAbbreviation):
+def getUnit(medicalTests, testAbbreviation):
     for test in medicalTests:
         if testAbbreviation == test.getAbbreviation():
             return test.getUnit()
 
-    return None
+    return
