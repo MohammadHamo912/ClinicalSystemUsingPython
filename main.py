@@ -1,12 +1,4 @@
-import functions as fn
-
-class Patient():
-
-    def __init__(self, id):
-        self.id = id
-
-
-
+import package as fn
 
 def menu():
     print("Welcome to The Clinical System")
