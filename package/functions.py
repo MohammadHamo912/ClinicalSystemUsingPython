@@ -44,9 +44,11 @@ def addNewMedicalTest():
     print("Enter the abbreviation of the medical test:")
     abbreviation = input()
 
-    print("Enter the min normal range of the medical test:(The range should be positive, if there is no min range enter -1 )")
+    print(
+        "Enter the min normal range of the medical test:(The range should be positive, if there is no min range enter -1 )")
     min_range = input()
-    print("Enter the max normal range of the medical test: (The range should be positive, if there is no max range enter -1 )")
+    print(
+        "Enter the max normal range of the medical test: (The range should be positive, if there is no max range enter -1 )")
     max_range = input()
 
     test_range = [min_range, max_range]
@@ -76,6 +78,10 @@ def addNewMedicalRecord():
         print("Wrong Test Abbreviation, please try again")
         test_abbreviation = input()
 
+    for test in medicalTests:
+        if test.getAbbreviation() == test_abbreviation:
+            patient_medical_test = test
+
     print("Enter the date of the test (YYYY-MM-DD hh:mm)")
     date = input()
     while not validCheck.validDate(date):
@@ -96,7 +102,7 @@ def addNewMedicalRecord():
 
     unit = validCheck.getUnit(medicalTests, test_abbreviation)
 
-    medical_record = mrClass.MedicalRecord(patient_id, test_abbreviation, date, result, unit, status)
+    medical_record = mrClass.MedicalRecord(patient_id, patient_medical_test, date, result, unit, status)
     medicalRecords.append(medical_record)
     medical_record.addToMedicalRecord()
     # write into medicalRecord.txt print(patientID)

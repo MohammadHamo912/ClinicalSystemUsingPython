@@ -3,20 +3,21 @@
 class MedicalRecord:
     records = []
 
-    def __init__(self, patient_id, test_abbreviation, date, result, unit, status, result_date=None):
+    def __init__(self, patient_id, test, date, result, unit, status):
         self.patient_id = patient_id
-        self.test_abbreviation = test_abbreviation
+        self.test = test
         self.date = date
         self.result = result
         self.unit = unit
         self.status = status
-        if result_date is not None:
-            self.result_date = result_date
+        if status == "Completed":
+            self.result_date = self.test.getTimeToBeCompleted()
         else:
             self.result_date = None
-    def updateRecord(self, test_abbreviation=None, result=None, status=None, result_date=None):
-        if test_abbreviation:
-            self.test_abbreviation = test_abbreviation
+
+    def updateRecord(self, test=None, result=None, status=None, result_date=None):
+        if test:
+            self.test = test
         if result:
             self.result = result
         if status:
@@ -26,10 +27,11 @@ class MedicalRecord:
 
     def addToMedicalRecord(self):
         with open("medicalRecord.txt", 'a') as file:
-            record = f"{self.patient_id}: {self.test_abbreviation}, {self.date}, {self.result}, {self.unit}, {self.status}"
+            record = f"{self.patient_id}: {self.test.getAbbreviation()}, {self.date}, {self.result}, {self.unit}, {self.status}"
             if self.result_date:
                 record += f", {self.result_date}"
             record += "\n"
             file.write(record)
+
 
         file.close()

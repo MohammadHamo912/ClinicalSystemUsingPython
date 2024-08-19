@@ -65,4 +65,5 @@ class MedicalTest:
     def getRange(self):
         return self.test_range
 
-
+    def getTimeToBeCompleted(self):
+        return self.time_to_be_completed
