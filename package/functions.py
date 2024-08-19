@@ -1,4 +1,4 @@
-from . import medicalRecord as mrClass
+from . import medicalRecord as mrClass, MedicalTest
 from . import validityCheck as validCheck
 from . import MedicalTest as mtClass
 
@@ -44,12 +44,12 @@ def addNewMedicalTest():
     print("Enter the abbreviation of the medical test:")
     abbreviation = input()
 
-    print("Enter the min normal range of the medical test:")
+    print("Enter the min normal range of the medical test:(The range should be positive, if there is no min range enter -1 )")
     min_range = input()
-    print("Enter the max normal range of the medical test:")
+    print("Enter the max normal range of the medical test: (The range should be positive, if there is no max range enter -1 )")
     max_range = input()
 
-    test_range = (min_range, max_range)
+    test_range = [min_range, max_range]
 
     print("Enter the unit for this medical test:")
     unit = input()
@@ -58,7 +58,7 @@ def addNewMedicalTest():
     time_to_be_completed = input()
     medical_test = mtClass(name, abbreviation, test_range, unit, time_to_be_completed)
 
-    medicalTests.append(medical_test)
+    medical_test.addMedicalTest(MedicalTest.numberOfMedicalTests)
 
     print(medical_test.getAbbreviation(), "is added successfully to medical tests")
 

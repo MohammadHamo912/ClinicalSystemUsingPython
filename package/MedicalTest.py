@@ -16,7 +16,21 @@ class MedicalTest:
     def addMedicalTest(self, numberOfMedicalTests):
         open_medical_test_file = open("medicalTest.txt", "a")
         open_medical_test_file.write(
-            f"{numberOfMedicalTests}. Name: {self.testName} ({self.abbreviation}); Range: {self.test_range}; Unit: {self.unit}, {self.time_to_be_completed}\n")
+            f"{numberOfMedicalTests}. Name: {self.testName} ({self.abbreviation}); Range: ")
+
+
+        if int(self.test_range[0]) != -1:
+            open_medical_test_file.write(
+                f"> {self.test_range[0]}, ")
+
+        if int(self.test_range[1]) != -1:
+            open_medical_test_file.write(
+                f"< {self.test_range[1]}"
+            )
+
+        open_medical_test_file.write(
+            f"; Unit: {self.unit}, {self.time_to_be_completed} \n")
+        open_medical_test_file.close()
 
     def printMedicalTest(self):
         print(self.testName, self.abbreviation, self.test_range, self.unit, self.time_to_be_completed)
