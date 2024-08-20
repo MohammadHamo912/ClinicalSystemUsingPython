@@ -109,3 +109,93 @@ def addNewMedicalRecord():
 
     print("Added Successfully")
     return
+
+def filterMedicalRecords():
+    tempList=[]
+    while 1:
+        choice=int(input("Choose the categories you would like to filter: "))
+        print("1. Patient ID")
+        print("2. Test Name")
+        print("3. Abnormal Test")
+        print("4. Specific Date")
+        print("5. Test Status")
+        print("6. Test turnaround time")#didnt make a function for that one
+        print("7. Exit Filter")
+        if choice==1:
+            patient_id = int(input("Enter the patient ID: "))
+            if validCheck.validPatientID(patient_id):
+                if tempList==[]:
+                    for record in medicalRecords:
+                        if record.patientID == patient_id:
+                            tempList.append(record)
+                else:
+                    for record in tempList:
+                        if record.patientID != patient_id:
+                            tempList.remove(record)
+            else:
+                continue
+
+        elif choice==2:
+            test_name = int(input("Enter test name: "))
+            if validCheck.validTestName(test_name):
+                if tempList == []:
+                    for record in medicalRecords:
+                        if record.testName == test_name:
+                            tempList.append(record)
+                else:
+                    for record in tempList:
+                        if record.testName != test_name:
+                            tempList.remove(record)
+            else:
+                continue
+
+        elif choice==3:
+            if tempList == []:
+                for record in medicalRecords:
+                    if validCheck.upNormalResult(mtClass.medicalTestNames, record.test_range, mtClass.medicalTestAbbreviations):
+                        tempList.append(record)
+            else:
+                for record in tempList:
+                    if not validCheck.upNormalResult(mtClass.medicalTestNames, record.test_range, mtClass.medicalTestAbbreviations):
+                        tempList.remove(record)
+
+
+        elif choice==4:
+            start_date=input("Enter the start date of search (YYYY-MM-DD): ")
+            finish_date=input("Enter the end date of search (YYYY-MM-DD): ")
+            if validCheck.validDate(start_date) and validCheck.validDate(finish_date):
+                if tempList == []:
+                    for record in medicalRecords:
+                        if record.date >= start_date and record.date <= finish_date:
+                            tempList.append(record)
+                else:
+                    for record in tempList:
+                        if record.date >= start_date and record.date <= finish_date:
+                            tempList.remove(record)
+            else:
+                continue
+
+        elif choice==5:
+            test_status = int(input("Enter test status: "))
+            if validCheck.validStatus(test_status):
+                if tempList == []:
+                    for record in medicalRecords:
+                        if record.status == test_status:
+                            tempList.append(record)
+                else:
+                    for record in tempList:
+                        if record.status != test_status:
+                            tempList.remove(record)
+            else:
+                continue
+
+        elif choice==6:
+            return #empty so no errors pop up
+
+        elif choice==7:
+            for record in tempList:
+                print(record)
+            print("Exiting filter...")
+            return
+
+
