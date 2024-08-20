@@ -109,3 +109,7 @@ def addNewMedicalRecord():
 
     print("Added Successfully")
     return
+
+
+def updateMedicalRecord():
+    print("Enter the patient ID")

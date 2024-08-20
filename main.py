@@ -23,6 +23,9 @@ def menu():
             fn.addNewMedicalRecord()
         elif choice == 2:
             fn.addNewMedicalTest()
+        elif choice == 3:
+            fn.updateMedicalRecord()
+
 
         else:
             break
