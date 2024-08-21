@@ -119,7 +119,7 @@ def filterMedicalRecords():
         print("3. Abnormal Test")
         print("4. Specific Date")
         print("5. Test Status")
-        print("6. Test turnaround time")#didnt make a function for that one
+        print("6. Test turnaround time") # didn't make a function for that one
         print("7. Exit Filter")
         if choice==1:
             patient_id = int(input("Enter the patient ID: "))
