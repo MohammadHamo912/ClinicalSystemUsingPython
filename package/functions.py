@@ -119,7 +119,7 @@ def filterMedicalRecords():
         print("3. Abnormal Test")
         print("4. Specific Date")
         print("5. Test Status")
-        print("6. Test turnaround time") # didn't make a function for that one
+        print("6. Test turnaround time")#didnt make a function for that one
         print("7. Exit Filter")
         if choice==1:
             patient_id = int(input("Enter the patient ID: "))
@@ -147,7 +147,7 @@ def filterMedicalRecords():
                         if record.testName != test_name:
                             tempList.remove(record)
             else:
-                continue
+                print("Invalid testName")
 
         elif choice==3:
             if tempList == []:
@@ -199,6 +199,59 @@ def filterMedicalRecords():
             return
 
 
+def deleteMedialRecord():
+        tempList=[]
+        choice=int(input("How would you like to delete a record: "))
+        print("1. Patient ID")
+        print("2. Test Name")
+        print("3. Specific Date")
+        print("4. Test Status")
+        if choice==1:
+            patient_id = int(input("Enter the patient ID: "))
+            if validCheck.validPatientID(patient_id):
+                for record in medicalRecords:
+                    if record.patientID == patient_id:
+                        tempList.append(record)
+                if tempList == []:
+                    print("No such patient")
+                    return
+                else:
+                    for record in tempList:
+                        print(record)
+                    tempList=[]
+                second_choice=input("what test name would you like to delete: ")
+                for record in tempList:
+                    if record.testName == second_choice:
+                        medicalRecords.remove(record)
+            else:
+                print("That's not a valid patient ID")
+                return
+
+        elif choice==2:
+            test_name = input("Enter test name you want to delete from the records: ")
+            for record in medicalRecords:
+                if record.testName == test_name:
+                    medicalRecords.remove(record)
+
+        elif choice==3:
+            start_date = input("Enter the start date of delete (YYYY-MM-DD): ")
+            finish_date = input("Enter the end date of delete (YYYY-MM-DD): ")
+            if validCheck.validDate(start_date) and validCheck.validDate(finish_date):
+                for record in medicalRecords:
+                    if record.date >= start_date and record.date <= finish_date:
+                        medicalRecords.remove(record)
+            else:
+                    print("That's not a valid date range")
+                    return
+        elif choice==4:
+            status = input("Enter test status: ")
+            if validCheck.validStatus(status):
+                for record in medicalRecords:
+                    if record.status == status:
+                        medicalRecords.remove(record)
+            else:
+                print("That's not a valid test status")
+                return
 
 
 def updateMedicalRecord():

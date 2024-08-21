@@ -33,5 +33,16 @@ class MedicalRecord:
             record += "\n"
             file.write(record)
 
+    def remove(self):
+        with open("medicalRecord.txt", 'r') as file:
+            records = file.readlines()
+        updated_records = []
+        record_to_remove = f"{self.patient_id}: {self.test.getAbbreviation()}"
+        for record in records:
+            if not record.startswith(record_to_remove):
+                updated_records.append(record)
+
+        with open("medicalRecord.txt", 'w') as file:
+            file.writelines(updated_records)
 
         file.close()
