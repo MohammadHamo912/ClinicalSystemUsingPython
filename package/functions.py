@@ -121,7 +121,7 @@ def filterMedicalRecords():
         print("5. Test Status")
         print("6. Test turnaround time")#didnt make a function for that one
         print("7. Exit Filter")
-        if choice==1:
+        if choice == 1:
             patient_id = int(input("Enter the patient ID: "))
             if validCheck.validPatientID(patient_id):
                 if tempList==[]:
@@ -137,7 +137,7 @@ def filterMedicalRecords():
 
         elif choice==2:
             test_name = int(input("Enter test name: "))
-            if validCheck.validTestName(test_name):
+            if validCheck.validTestAbbreviation(test_name):
                 if tempList == []:
                     for record in medicalRecords:
                         if record.testName == test_name:
@@ -199,7 +199,7 @@ def filterMedicalRecords():
             return
 
 
-def deleteMedialRecord():
+def deleteMedicalRecord():
         tempList=[]
         choice=int(input("How would you like to delete a record: "))
         print("1. Patient ID")
