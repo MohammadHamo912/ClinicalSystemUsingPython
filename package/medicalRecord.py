@@ -46,3 +46,6 @@ class MedicalRecord:
             file.writelines(updated_records)
 
         file.close()
+
+    def __str__(self):
+        return f"Patient ID: {self.patient_id}, Test: {self.test.getAbbreviation()}, Date: {self.date}, Result: {self.result}, Status: {self.status}"

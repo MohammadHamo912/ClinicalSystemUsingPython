@@ -110,6 +110,37 @@ def addNewMedicalRecord():
     print("Added Successfully")
     return
 
+
+
+def updateMedicalRecord():
+    patient_id = input("Enter the patient ID: ")
+    test_abbreviation = input("Enter the test abbreviation: ")
+
+    for record in medicalRecords:
+        if record.patient_id == patient_id and record.test.getAbbreviation() == test_abbreviation:
+            new_status = input("Enter new status: ")
+            new_result = input("Enter new result: ")
+
+            record.updateRecord(result=new_result, status=new_status)
+            print("Record updated successfully")
+            return
+
+    print("Record not found.")
+
+
+def updateMedicalTest():
+    test_name = input("Enter the name of the medical test to update: ")
+    new_range = input("Enter the new range for the test (min,max): ")
+    min_range, max_range = map(int, new_range.split(','))
+
+    for test in medicalTests:
+        if test.getTestName() == test_name:
+            test.updateMedicalTest(test_name, [min_range, max_range])
+            print(f"Medical test '{test_name}' updated successfully.")
+            return
+
+    print(f"Medical test '{test_name}' not found.")
+
 def filterMedicalRecords():
     tempList=[]
     while 1:
@@ -254,5 +285,46 @@ def deleteMedicalRecord():
                 return
 
 
-def updateMedicalRecord():
-    print("Enter the patient ID")
+
+def generateTextualSummary():
+    with open("summary_report.txt", "w") as file:
+        for record in medicalRecords:
+            file.write(f"Patient ID: {record.patient_id}, Test: {record.test.getAbbreviation()}, Date: {record.date}, "
+                       f"Result: {record.result} {record.unit}, Status: {record.status}\n")
+
+    print("Summary report generated")
+
+
+def exportMedicalRecords():
+    import csv
+
+    with open('medical_records_export.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Patient ID', 'Test', 'Date', 'Result', 'Unit', 'Status'])
+
+        for record in medicalRecords:
+            writer.writerow([record.patient_id, record.test.getAbbreviation(), record.date, record.result,
+                             record.unit, record.status])
+
+    print("Medical records exported successfully to 'medical_records_export.csv'")
+
+
+
+def importMedicalRecords():
+    import csv
+
+    with open('medical_records_import.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        next(reader)  # Skip header row
+
+        for row in reader:
+            patient_id, test_abbreviation, date, result, unit, status = row
+
+            for test in medicalTests:
+                if test.getAbbreviation() == test_abbreviation:
+                    patient_medical_test = test
+
+            medical_record = mrClass.MedicalRecord(patient_id, patient_medical_test, date, result, unit, status)
+            medicalRecords.append(medical_record)
+
+    print("Medical records imported successfully from 'medical_records_import.csv'")

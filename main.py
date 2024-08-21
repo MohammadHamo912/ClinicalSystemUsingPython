@@ -23,6 +23,10 @@ def menu():
             fn.addNewMedicalRecord()
         elif choice == 2:
             fn.addNewMedicalTest()
+        elif choice == 3:
+            fn.updateMedicalRecord()
+        elif choice == 4:
+            fn.updateMedicalTest()
         elif choice == 5:
             fn.filterMedicalRecords()
         elif choice == 7:
@@ -36,10 +40,7 @@ def menu():
 
 
 menu()
-'''  elif choice == 3:
-            fn.updateMedicalRecords()
-        elif choice == 4:
-            fn.updateMeidcalTest()
+'''  
         elif choice == 5:
             fn.displayMedicalRecords()
         elif choice == 6:
