@@ -22,8 +22,6 @@ def upNormalResult(medical_tests, test_result, test_abbreviation):
     open_medical_test = open("medicalTest.txt", "r")
     for test in medical_tests:
         if test_abbreviation == test.getAbbreviation:
-            # 2. Name: Blood Glucose Test (BGT); Range: > 70, < 99; Unit: mg/dL, 00-12-06
-            # 3. Name: LDL Cholesterol Low-Density Lipoprotein (LDL); Range: < 100; Unit: mg/dL, 00-17-06
             test_range = test.getRange()
             min_val = test_range[0]
             max_val = test_range[1]

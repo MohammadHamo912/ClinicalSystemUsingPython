@@ -78,11 +78,9 @@ def addNewMedicalRecord():
         print("Wrong Test Abbreviation, please try again")
         test_abbreviation = input()
 
-    patient_medical_test = None
     for test in medicalTests:
         if test.getAbbreviation() == test_abbreviation:
             patient_medical_test = test
-            break
 
     print("Enter the date of the test (YYYY-MM-DD hh:mm)")
     date = input()
@@ -107,14 +105,46 @@ def addNewMedicalRecord():
     medical_record = mrClass.MedicalRecord(patient_id, patient_medical_test, date, result, unit, status)
     medicalRecords.append(medical_record)
     medical_record.addToMedicalRecord()
+    # write into medicalRecord.txt print(patientID)
 
     print("Added Successfully")
     return
 
+
+
+def updateMedicalRecord():
+    patient_id = input("Enter the patient ID: ")
+    test_abbreviation = input("Enter the test abbreviation: ")
+
+    for record in medicalRecords:
+        if record.patient_id == patient_id and record.test.getAbbreviation() == test_abbreviation:
+            new_status = input("Enter new status: ")
+            new_result = input("Enter new result: ")
+
+            record.updateRecord(result=new_result, status=new_status)
+            print("Record updated successfully")
+            return
+
+    print("Record not found.")
+
+
+def updateMedicalTest():
+    test_name = input("Enter the name of the medical test to update: ")
+    new_range = input("Enter the new range for the test (min,max): ")
+    min_range, max_range = map(int, new_range.split(','))
+
+    for test in medicalTests:
+        if test.getTestName() == test_name:
+            test.updateMedicalTest(test_name, [min_range, max_range])
+            print(f"Medical test '{test_name}' updated successfully.")
+            return
+
+    print(f"Medical test '{test_name}' not found.")
+
 def filterMedicalRecords():
     tempList=[]
-    while True:
-        print("Choose the categories you would like to filter: ")
+    while 1:
+        choice=int(input("Choose the categories you would like to filter: "))
         print("1. Patient ID")
         print("2. Test Name")
         print("3. Abnormal Test")
@@ -122,32 +152,33 @@ def filterMedicalRecords():
         print("5. Test Status")
         print("6. Test turnaround time")#didnt make a function for that one
         print("7. Exit Filter")
-        choice = int(input())
         if choice == 1:
-            patient_id = input("Enter the patient ID: ")
+            patient_id = int(input("Enter the patient ID: "))
             if validCheck.validPatientID(patient_id):
-                newTempList = []
-                for record in (medicalRecords if not tempList else tempList):
-                    if record.patientID == patient_id:
-                        newTempList.append(record)
-                tempList = newTempList
-            else:
-                print("Wrong Patient ID, please try again")
-
-        elif choice==2:
-            test_name = input("Enter test name: ")
-            if validCheck.validTestAbbreviation(medicalTests, test_name):
-                if tempList == []:
+                if not tempList:
                     for record in medicalRecords:
-                        if record.test.getAbbreviation() == test_name:
+                        if record.patientID == patient_id:
                             tempList.append(record)
                 else:
                     for record in tempList:
-                        if record.test.getAbbreviation() != test_name:
+                        if record.patientID != patient_id:
                             tempList.remove(record)
             else:
-                print("Invalid testName, please try again")
                 continue
+
+        elif choice==2:
+            test_name = int(input("Enter test name: "))
+            if validCheck.validTestAbbreviation(test_name):
+                if tempList == []:
+                    for record in medicalRecords:
+                        if record.testName == test_name:
+                            tempList.append(record)
+                else:
+                    for record in tempList:
+                        if record.testName != test_name:
+                            tempList.remove(record)
+            else:
+                print("Invalid testName")
 
         elif choice==3:
             if tempList == []:
@@ -173,11 +204,10 @@ def filterMedicalRecords():
                         if record.date >= start_date and record.date <= finish_date:
                             tempList.remove(record)
             else:
-                print("Invalid date, please try again")
                 continue
 
         elif choice==5:
-            test_status = input("Enter test status: ")
+            test_status = int(input("Enter test status: "))
             if validCheck.validStatus(test_status):
                 if tempList == []:
                     for record in medicalRecords:
@@ -188,18 +218,16 @@ def filterMedicalRecords():
                         if record.status != test_status:
                             tempList.remove(record)
             else:
-                print("Invalid test status, please try again")
                 continue
 
         elif choice==6:
             return #empty so no errors pop up
 
         elif choice==7:
-            print(tempList)
+            for record in tempList:
+                print(record)
             print("Exiting filter...")
             return
-        else:
-            print("Wrong Choice, please try again")
 
 
 def deleteMedicalRecord():
@@ -257,5 +285,46 @@ def deleteMedicalRecord():
                 return
 
 
-def updateMedicalRecord():
-    print("Enter the patient ID")
+
+def generateTextualSummary():
+    with open("summary_report.txt", "w") as file:
+        for record in medicalRecords:
+            file.write(f"Patient ID: {record.patient_id}, Test: {record.test.getAbbreviation()}, Date: {record.date}, "
+                       f"Result: {record.result} {record.unit}, Status: {record.status}\n")
+
+    print("Summary report generated")
+
+
+def exportMedicalRecords():
+    import csv
+
+    with open('medical_records_export.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Patient ID', 'Test', 'Date', 'Result', 'Unit', 'Status'])
+
+        for record in medicalRecords:
+            writer.writerow([record.patient_id, record.test.getAbbreviation(), record.date, record.result,
+                             record.unit, record.status])
+
+    print("Medical records exported successfully to 'medical_records_export.csv'")
+
+
+
+def importMedicalRecords():
+    import csv
+
+    with open('medical_records_import.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        next(reader)  # Skip header row
+
+        for row in reader:
+            patient_id, test_abbreviation, date, result, unit, status = row
+
+            for test in medicalTests:
+                if test.getAbbreviation() == test_abbreviation:
+                    patient_medical_test = test
+
+            medical_record = mrClass.MedicalRecord(patient_id, patient_medical_test, date, result, unit, status)
+            medicalRecords.append(medical_record)
+
+    print("Medical records imported successfully from 'medical_records_import.csv'")

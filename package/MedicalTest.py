@@ -14,6 +14,7 @@ class MedicalTest:
         MedicalTest.medicalTestAbbreviations.append(abbreviation)
 
     def addMedicalTest(self, numberOfMedicalTests):
+        numberOfMedicalTests += 1
         open_medical_test_file = open("medicalTest.txt", "a")
         open_medical_test_file.write(
             f"{numberOfMedicalTests}. Name: {self.testName} ({self.abbreviation}); Range: ")
@@ -31,6 +32,8 @@ class MedicalTest:
         open_medical_test_file.write(
             f"; Unit: {self.unit}, {self.time_to_be_completed} \n")
         open_medical_test_file.close()
+
+
 
     def printMedicalTest(self):
         print(self.testName, self.abbreviation, self.test_range, self.unit, self.time_to_be_completed)

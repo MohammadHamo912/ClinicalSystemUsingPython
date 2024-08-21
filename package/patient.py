@@ -1,6 +1,6 @@
 
 class Patient:
-    patiensIDs = []
+    patientsIDs = []
     medicalRecords = []
     def __init__(self,id):
         self.id = id
