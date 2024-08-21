@@ -14,7 +14,7 @@ class MedicalTest:
         MedicalTest.medicalTestAbbreviations.append(abbreviation)
 
     def addMedicalTest(self, numberOfMedicalTests):
-        numberOfMedicalTests +=1
+        numberOfMedicalTests += 1
         open_medical_test_file = open("medicalTest.txt", "a")
         open_medical_test_file.write(
             f"{numberOfMedicalTests}. Name: {self.testName} ({self.abbreviation}); Range: ")

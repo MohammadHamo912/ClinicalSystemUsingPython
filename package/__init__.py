@@ -10,3 +10,6 @@ from .functions import updateMedicalTest
 
 from .functions import filterMedicalRecords
 from .functions import deleteMedicalRecord
+
+from .functions import importMedicalRecords
+from .functions import exportMedicalRecords

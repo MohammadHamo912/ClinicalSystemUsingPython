@@ -31,9 +31,10 @@ def menu():
             fn.filterMedicalRecords()
         elif choice == 7:
             fn.deleteMedicalRecord()
-
         else:
             break
+
+
 
 
 

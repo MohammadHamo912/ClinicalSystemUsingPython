@@ -155,7 +155,7 @@ def filterMedicalRecords():
         if choice == 1:
             patient_id = int(input("Enter the patient ID: "))
             if validCheck.validPatientID(patient_id):
-                if tempList==[]:
+                if not tempList:
                     for record in medicalRecords:
                         if record.patientID == patient_id:
                             tempList.append(record)
