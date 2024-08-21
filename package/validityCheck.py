@@ -1,4 +1,5 @@
 def validPatientID(patient_id):
+    patient_id = str(patient_id)
     if len(patient_id) != 7:
         return False
     for num in patient_id:

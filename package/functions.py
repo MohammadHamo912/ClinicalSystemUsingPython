@@ -78,9 +78,11 @@ def addNewMedicalRecord():
         print("Wrong Test Abbreviation, please try again")
         test_abbreviation = input()
 
+    patient_medical_test = None
     for test in medicalTests:
         if test.getAbbreviation() == test_abbreviation:
             patient_medical_test = test
+            break
 
     print("Enter the date of the test (YYYY-MM-DD hh:mm)")
     date = input()
@@ -105,15 +107,14 @@ def addNewMedicalRecord():
     medical_record = mrClass.MedicalRecord(patient_id, patient_medical_test, date, result, unit, status)
     medicalRecords.append(medical_record)
     medical_record.addToMedicalRecord()
-    # write into medicalRecord.txt print(patientID)
 
     print("Added Successfully")
     return
 
 def filterMedicalRecords():
     tempList=[]
-    while 1:
-        choice=int(input("Choose the categories you would like to filter: "))
+    while True:
+        print("Choose the categories you would like to filter: ")
         print("1. Patient ID")
         print("2. Test Name")
         print("3. Abnormal Test")
@@ -121,33 +122,32 @@ def filterMedicalRecords():
         print("5. Test Status")
         print("6. Test turnaround time")#didnt make a function for that one
         print("7. Exit Filter")
+        choice = int(input())
         if choice == 1:
-            patient_id = int(input("Enter the patient ID: "))
+            patient_id = input("Enter the patient ID: ")
             if validCheck.validPatientID(patient_id):
-                if tempList==[]:
-                    for record in medicalRecords:
-                        if record.patientID == patient_id:
-                            tempList.append(record)
-                else:
-                    for record in tempList:
-                        if record.patientID != patient_id:
-                            tempList.remove(record)
+                newTempList = []
+                for record in (medicalRecords if not tempList else tempList):
+                    if record.patientID == patient_id:
+                        newTempList.append(record)
+                tempList = newTempList
             else:
-                continue
+                print("Wrong Patient ID, please try again")
 
         elif choice==2:
-            test_name = int(input("Enter test name: "))
-            if validCheck.validTestAbbreviation(test_name):
+            test_name = input("Enter test name: ")
+            if validCheck.validTestAbbreviation(medicalTests, test_name):
                 if tempList == []:
                     for record in medicalRecords:
-                        if record.testName == test_name:
+                        if record.test.getAbbreviation() == test_name:
                             tempList.append(record)
                 else:
                     for record in tempList:
-                        if record.testName != test_name:
+                        if record.test.getAbbreviation() != test_name:
                             tempList.remove(record)
             else:
-                print("Invalid testName")
+                print("Invalid testName, please try again")
+                continue
 
         elif choice==3:
             if tempList == []:
@@ -173,10 +173,11 @@ def filterMedicalRecords():
                         if record.date >= start_date and record.date <= finish_date:
                             tempList.remove(record)
             else:
+                print("Invalid date, please try again")
                 continue
 
         elif choice==5:
-            test_status = int(input("Enter test status: "))
+            test_status = input("Enter test status: ")
             if validCheck.validStatus(test_status):
                 if tempList == []:
                     for record in medicalRecords:
@@ -187,16 +188,18 @@ def filterMedicalRecords():
                         if record.status != test_status:
                             tempList.remove(record)
             else:
+                print("Invalid test status, please try again")
                 continue
 
         elif choice==6:
             return #empty so no errors pop up
 
         elif choice==7:
-            for record in tempList:
-                print(record)
+            print(tempList)
             print("Exiting filter...")
             return
+        else:
+            print("Wrong Choice, please try again")
 
 
 def deleteMedicalRecord():

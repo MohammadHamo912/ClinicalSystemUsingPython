@@ -32,9 +32,6 @@ def menu():
             break
 
 
-
-
-
 menu()
 '''  elif choice == 3:
             fn.updateMedicalRecords()
