@@ -143,8 +143,8 @@ def updateMedicalTest():
 
 def filterMedicalRecords():
     tempList=[]
-    while 1:
-        choice=int(input("Choose the categories you would like to filter: "))
+    while True:
+        print("Choose the categories you would like to filter: ")
         print("1. Patient ID")
         print("2. Test Name")
         print("3. Abnormal Test")
@@ -152,6 +152,7 @@ def filterMedicalRecords():
         print("5. Test Status")
         print("6. Test turnaround time")#didnt make a function for that one
         print("7. Exit Filter")
+        choice = int(input())
         if choice == 1:
             patient_id = int(input("Enter the patient ID: "))
             if validCheck.validPatientID(patient_id):
@@ -168,7 +169,7 @@ def filterMedicalRecords():
 
         elif choice==2:
             test_name = int(input("Enter test name: "))
-            if validCheck.validTestAbbreviation(test_name):
+            if validCheck.validTestAbbreviation(medicalTests, test_name):
                 if tempList == []:
                     for record in medicalRecords:
                         if record.testName == test_name:
@@ -229,6 +230,63 @@ def filterMedicalRecords():
             print("Exiting filter...")
             return
 
+def filterMedicalTests():
+    print("Choose the categories you would like to filter: ")
+    print("1. Test Abbreviation")
+    print("2. Range")
+    print("3. Unit of Test")
+    print("4. Execution Time")
+    choice = int(input())
+    if choice == 1:
+        test_abbreviation = input("Enter the test abbreviation: ")
+        if validCheck.validTestAbbreviation(medicalTests, test_abbreviation):
+            for test in medicalTests:
+                if test.getAbbreviation() == test_abbreviation:
+                    print(test)
+        else:
+            print("No such Test abbreviation")
+
+    if choice == 2:
+        first_test_range = float(input("Range is greater than or equal to: "))
+        second_test_range = float(input("Range is less than or equal to: "))
+        for test in medicalTests:
+            if test.getrange()[0] == first_test_range and test.getrange()[1] == second_test_range:
+                print(test)
+
+    if choice == 3:
+        unit=input("Enter the unit: ")
+        for test in medicalTests:
+            if test.getUnitOfTest() == unit:
+                print(test)
+
+    if choice == 4:
+        print("Choose a choice")
+        print("1. More than a certain time")
+        print("2. Less than a certain time")
+        print("3. equal to a certain time")
+        choice = int(input())
+        if choice == 3:
+            execution_time = input("Enter the execution time (dd:hh:mm): ")
+            for test in medicalTests:
+                if test.getExecutionTime() == execution_time:
+                    print(test)
+
+        elif choice == 2:
+            execution_time = input("Enter the max execution time (dd:hh:mm): ")
+            for test in medicalTests:
+                if test.getExecutionTime() < execution_time:
+                    print(test)
+
+        elif choice == 1:
+
+            execution_time = input("Enter the min execution time (dd:hh:mm): ")
+            for test in medicalTests:
+                if test.getExecutionTime() > execution_time:
+                    print(test)
+
+        else:
+            print("Invalid choice")
+
 
 def deleteMedicalRecord():
         tempList=[]
@@ -284,6 +342,14 @@ def deleteMedicalRecord():
                 print("That's not a valid test status")
                 return
 
+def deleteMedicalTest():
+    test_abbreviation=input("Enter the test Abbreviation you want to delete: ")
+    if validCheck.validTestAbbreviation(medicalTests, test_abbreviation):
+        for record in medicalRecords:
+            if record.abbreviation == test_abbreviation:
+                medicalRecords.remove(record)
+    else:
+        print("That's not a valid test abbreviation")
 
 
 def generateTextualSummary():
