@@ -99,7 +99,6 @@ def addNewMedicalRecord():
     medical_record = mrClass.MedicalRecord(patient_id, patient_medical_test, date, result, unit, status)
     medicalRecords.append(medical_record)
     medical_record.addToMedicalRecord()
-    # write into medicalRecord.txt print(patientID)
 
     print("Added Successfully")
     return
@@ -137,7 +136,7 @@ def updateMedicalTest():
 
 
 def filterMedicalRecords():
-    tempList = medicalRecords[:]  # Start with a copy of all records
+    tempList = medicalRecords[:]
 
     while True:
         print("Choose the categories you would like to filter: ")
@@ -167,9 +166,7 @@ def filterMedicalRecords():
                 continue
 
         elif choice == 3:
-            tempList = [record for record in tempList if
-                        validCheck.upNormalResult(mtClass.medicalTestNames, record.test_range,
-                                                  mtClass.medicalTestAbbreviations)]
+            tempList = [record for record in tempList if validCheck.upNormalResult(mtClass.medicalTestNames, record.result, mtClass.medicalTestAbbreviations)]
 
         elif choice == 4:
             start_date = input("Enter the start date of search (YYYY-MM-DD): ")
@@ -178,7 +175,6 @@ def filterMedicalRecords():
                 tempList = [record for record in tempList if start_date <= record.date <= end_date]
             else:
                 print("Invalid date format.")
-                continue
 
         elif choice == 5:
             test_status = input("Enter test status: ")
@@ -189,7 +185,6 @@ def filterMedicalRecords():
                 continue
 
         elif choice == 6:
-            # Placeholder for test turnaround time filtering
             print("Test turnaround time filtering not implemented yet.")
             continue
 
@@ -255,11 +250,11 @@ def filterMedicalTests():
         execution_time = input("Enter the execution time (dd-hh-mm): ")
         execution_minutes = time_to_minutes(execution_time)
 
-        if execution_minutes is not None:  # Proceed only if the time format is valid
+        if execution_minutes is not None:
             for test in medicalTests:
                 test_minutes = time_to_minutes(test.getTimeToBeCompleted())
 
-                if test_minutes is not None:  # Ensure that test_minutes is valid
+                if test_minutes is not None:
                     if sub_choice == 3 and test_minutes == execution_minutes:
                         print(mtClass.printMedicalTest(test))
                     elif sub_choice == 2 and test_minutes < execution_minutes:
@@ -272,11 +267,9 @@ def filterMedicalTests():
 
 def time_to_minutes(time_str):
     try:
-        # Split the string by colon and convert to integers
         days, hours, minutes = map(int, time_str.split('-'))
         return days * 24 * 60 + hours * 60 + minutes
     except ValueError:
-        # Handle the case where the format is incorrect
         print(f"Error: Invalid time format '{time_str}'. Expected format is 'dd-hh-mm'.")
         return None
 
@@ -293,7 +286,7 @@ def deleteMedicalRecord():
             patient_id = int(input("Enter the patient ID: "))
             if validCheck.validPatientID(patient_id):
                 for record in medicalRecords:
-                    if record.patientID == patient_id:
+                    if record.patient_id == patient_id:
                         tempList.append(record)
                 if tempList == []:
                     print("No such patient")
@@ -310,13 +303,13 @@ def deleteMedicalRecord():
                 print("That's not a valid patient ID")
                 return
 
-        elif choice==2:
+        elif choice == 2:
             test_name = input("Enter test name you want to delete from the records: ")
             for record in medicalRecords:
                 if record.testName == test_name:
                     medicalRecords.remove(record)
 
-        elif choice==3:
+        elif choice == 3:
             start_date = input("Enter the start date of delete (YYYY-MM-DD): ")
             finish_date = input("Enter the end date of delete (YYYY-MM-DD): ")
             if validCheck.validDate(start_date) and validCheck.validDate(finish_date):
@@ -326,7 +319,7 @@ def deleteMedicalRecord():
             else:
                     print("That's not a valid date range")
                     return
-        elif choice==4:
+        elif choice == 4:
             status = input("Enter test status: ")
             if validCheck.validStatus(status):
                 for record in medicalRecords:
@@ -344,9 +337,9 @@ def deleteMedicalRecord():
 def deleteMedicalTest():
     test_abbreviation=input("Enter the test Abbreviation you want to delete: ")
     if validCheck.validTestAbbreviation(medicalTests, test_abbreviation):
-        for record in medicalRecords:
-            if record.abbreviation == test_abbreviation:
-                medicalRecords.remove(record)
+        for test in medicalTests:
+            if test.abbreviation == test_abbreviation:
+                medicalTests.remove(test)
     else:
         print("That's not a valid test abbreviation")
 

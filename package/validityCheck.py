@@ -32,32 +32,41 @@ def upNormalResult(medical_tests, test_result, test_abbreviation):
 
 
 def validDate(date):
-    yearMonthDay, time = date.split()
-
-    year, month, day = map(int, yearMonthDay.split('-'))
-    if not (1 <= month <= 12):
-        return False
-    if not (1 <= day <= 31):
-        return False
-
-    if month == 2:
-        if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
-            if day > 29:
-                return False
+    try:
+        if ' ' in date:
+            yearMonthDay, time = date.split()
         else:
-            if day > 28:
+            yearMonthDay = date
+            time = ''
+
+        year, month, day = map(int, yearMonthDay.split('-'))
+        if not (1 <= month <= 12):
+            return False
+        if not (1 <= day <= 31):
+            return False
+
+        if month == 2:
+            if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
+                if day > 29:
+                    return False
+            else:
+                if day > 28:
+                    return False
+
+        if month in [4, 6, 9, 11] and day > 30:
+            return False
+
+        if time:
+            hour, minute = map(int, time.split(':'))
+            if not (0 <= hour <= 23):
+                return False
+            if not (0 <= minute <= 59):
                 return False
 
-    if month in [4, 6, 9, 11] and day > 30:
+        return True
+    except ValueError:
         return False
 
-    hour, minute = map(int, time.split(':'))
-    if not (0 <= hour <= 23):
-        return False
-    if not (0 <= minute <= 59):
-        return False
-
-    return True
 
 # this needs edit
 def validResult(result):
