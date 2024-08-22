@@ -230,6 +230,7 @@ def filterMedicalRecords():
             print("Exiting filter...")
             return
 
+
 def filterMedicalTests():
     print("Choose the categories you would like to filter: ")
     print("1. Test Abbreviation")
@@ -237,6 +238,7 @@ def filterMedicalTests():
     print("3. Unit of Test")
     print("4. Execution Time")
     choice = int(input())
+
     if choice == 1:
         test_abbreviation = input("Enter the test abbreviation: ")
         if validCheck.validTestAbbreviation(medicalTests, test_abbreviation):
@@ -244,62 +246,60 @@ def filterMedicalTests():
                 if test.getAbbreviation() == test_abbreviation:
                     print(mtClass.printMedicalTest(test))
         else:
-            print("No such Test abbreviation")
+            print("No such test abbreviation")
 
-    if choice == 2:
+    elif choice == 2:
         first_input = input("Range is greater than or equal to (Leave empty if there is no lower limit): ")
         second_input = input("Range is less than or equal to (Leave empty if there is no upper limit): ")
-        first_test_range = float(first_input) if first_input else -1
-        second_test_range = float(second_input) if second_input else -1
 
-        if first_test_range == -1 and second_test_range == -1:
-            for test in medicalTests:
+        first_test_range = float(first_input) if first_input else float('-inf')
+        second_test_range = float(second_input) if second_input else float('inf')
+
+        for test in medicalTests:
+            test_range = test.getRange()
+            if first_test_range <= test_range[0] and second_test_range >= test_range[1]:
                 print(mtClass.printMedicalTest(test))
-        else:
-            for test in medicalTests:
-                if test.getRange()[0] >= first_test_range and test.getRange()[1] <= second_test_range:
-                    print(mtClass.printMedicalTest(test))
-            for test in medicalTests:
-                if first_test_range == -1 and second_test_range >= test.getRange()[1]:
-                    print(mtClass.printMedicalTest(test))
-            for test in medicalTests:
-                if first_test_range >= test.getRange()[0] and second_test_range == -1:
-                    print(mtClass.printMedicalTest(test))
 
-    if choice == 3:
-        unit=input("Enter the unit: ")
+    elif choice == 3:
+        unit = input("Enter the unit: ")
         for test in medicalTests:
             if test.getUnit() == unit:
                 print(mtClass.printMedicalTest(test))
 
-    if choice == 4:
-        print("Choose a choice")
+    elif choice == 4:
+        print("Choose a filter for execution time:")
         print("1. More than a certain time")
         print("2. Less than a certain time")
-        print("3. equal to a certain time")
-        choice = int(input())
-        if choice == 3:
-            execution_time = input("Enter the execution time (dd:hh:mm): ")
+        print("3. Equal to a certain time")
+        sub_choice = int(input())
+
+        execution_time = input("Enter the execution time (dd:hh:mm): ")
+        execution_minutes = time_to_minutes(execution_time)
+
+        if execution_minutes is not None:  # Proceed only if the time format is valid
             for test in medicalTests:
-                if test.getTimeToBeCompleted == execution_time:
-                    print(mtClass.printMedicalTest(test))
+                test_minutes = time_to_minutes(test.getTimeToBeCompleted())
 
-        elif choice == 2:
-            execution_time = input("Enter the max execution time (dd:hh:mm): ")
-            for test in medicalTests:
-                if test.getTimeToBeCompleted < execution_time:
-                    print(mtClass.printMedicalTest(test))
-
-        elif choice == 1:
-
-            execution_time = input("Enter the min execution time (dd:hh:mm): ")
-            for test in medicalTests:
-                if test.getTimeToBeCompleted > execution_time:
-                    print(mtClass.printMedicalTest(test))
-
+                if test_minutes is not None:  # Ensure that test_minutes is valid
+                    if sub_choice == 3 and test_minutes == execution_minutes:
+                        print(mtClass.printMedicalTest(test))
+                    elif sub_choice == 2 and test_minutes < execution_minutes:
+                        print(mtClass.printMedicalTest(test))
+                    elif sub_choice == 1 and test_minutes > execution_minutes:
+                        print(mtClass.printMedicalTest(test))
         else:
-            print("Invalid choice")
+            print("Invalid time format entered.")
 
+
+def time_to_minutes(time_str):
+    try:
+        # Split the string by colon and convert to integers
+        days, hours, minutes = map(int, time_str.split(':'))
+        return days * 24 * 60 + hours * 60 + minutes
+    except ValueError:
+        # Handle the case where the format is incorrect
+        print(f"Error: Invalid time format '{time_str}'. Expected format is 'dd:hh:mm'.")
+        return None
 
 def deleteMedicalRecord():
         tempList=[]
