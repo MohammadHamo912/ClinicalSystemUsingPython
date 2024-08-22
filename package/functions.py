@@ -9,31 +9,17 @@ medicalRecords = []
 # main 5 tests
 
 
-def medicalTestsSetUP():
-    with open("medicalTest.txt", 'w') as file:
-        # Opening the file in write mode will clear its contents
-        pass
+def medicalSystemSetUP():
+    with open('medicalTest.txt', 'w') as medicalTests:
+        medicalTests.write("")
+    with open('medicalRecord.txt', 'w') as medicalRecords:
+        medicalRecords.write("")
+    importMedicalTests()
+    importMedicalRecords()
 
-    testHgb = mtClass("Hemoglobin", "Hgb", (13.8, 17.2), "g/dL", "00-03-04")
-    testHgb.addMedicalTest(testHgb.numberOfMedicalTests)
-
-    testBGT = mtClass("Blood Glucose Test", "BGT", (70, 99), "mg/dL", "00-12-06")
-    testBGT.addMedicalTest(testBGT.numberOfMedicalTests)
-    testLDL = mtClass("LDL Cholesterol Low-Density Lipoprotein", "LDL", (0, 100), "mg/dL", "00-17-06")
-    testLDL.addMedicalTest(testLDL.numberOfMedicalTests)
-    testsystole = mtClass("Systolic Blood Pressure", "systole", (0, 120), "mm Hg", "00-08-04")
-    testsystole.addMedicalTest(testsystole.numberOfMedicalTests)
-    testdiastole = mtClass("Diastolic Blood Pressure", "diastole", (0, 80), "mm Hg", "00-10-00")
-    testdiastole.addMedicalTest(testdiastole.numberOfMedicalTests)
-
-    listOfMainTests = [testHgb, testBGT, testLDL, testsystole, testdiastole]
-
-    for i in listOfMainTests:
-        medicalTests.append(i)
-
-
-# Usage
-medicalTestsSetUP()
+def medicalSystemShutDown():
+    exportMedicalTests()
+    exportMedicalRecords()
 
 
 def addNewMedicalTest():
@@ -61,7 +47,7 @@ def addNewMedicalTest():
     medical_test = mtClass(name, abbreviation, test_range, unit, time_to_be_completed)
 
     medical_test.addMedicalTest(MedicalTest.numberOfMedicalTests)
-
+    medicalTests.append(medical_test)
     print(medical_test.getAbbreviation(), "is added successfully to medical tests")
 
 
@@ -84,9 +70,17 @@ def addNewMedicalRecord():
 
     print("Enter the date of the test (YYYY-MM-DD hh:mm)")
     date = input()
-    while not validCheck.validDate(date):
-        print("Wrong Date of Test, please try again")
-        date = input()
+    while True:
+        try:
+            if validCheck.validDate(date):
+                print("Valid Date")
+                break
+            else:
+                print("Invalid Date")
+                date = input()
+        except ValueError:
+            print("Invalid date ")
+            date = input()
 
     print("Enter your test result")
     result = input()
@@ -303,11 +297,13 @@ def time_to_minutes(time_str):
 
 def deleteMedicalRecord():
         tempList=[]
-        choice=int(input("How would you like to delete a record: "))
+        print("How would you like to delete a record: ")
         print("1. Patient ID")
         print("2. Test Name")
         print("3. Specific Date")
         print("4. Test Status")
+        choice = int(input())
+
         if choice==1:
             patient_id = int(input("Enter the patient ID: "))
             if validCheck.validPatientID(patient_id):
@@ -353,16 +349,21 @@ def deleteMedicalRecord():
                         medicalRecords.remove(record)
             else:
                 print("That's not a valid test status")
+
                 return
 
-#def deleteMedicalTest():
-    #test_abbreviation=input("Enter the test Abbreviation you want to delete: ")
-    #if validCheck.validTestAbbreviation(medicalTests, test_abbreviation):
-       # for record in medicalRecords:
-      #      if record.abbreviation == test_abbreviation:
-     #           medicalRecords.remove(record)
-    #else:
-        #print("That's not a valid test abbreviation")
+        else :
+            print("Invalid Choice")
+            return
+
+def deleteMedicalTest():
+    test_abbreviation=input("Enter the test Abbreviation you want to delete: ")
+    if validCheck.validTestAbbreviation(medicalTests, test_abbreviation):
+        for record in medicalRecords:
+            if record.abbreviation == test_abbreviation:
+                medicalRecords.remove(record)
+    else:
+        print("That's not a valid test abbreviation")
 
 
 def generateTextualSummary():
@@ -377,7 +378,7 @@ def generateTextualSummary():
 def exportMedicalRecords():
     import csv
 
-    with open('medical_records_export.csv', 'w', newline='') as csvfile:
+    with open('medical_records.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['Patient ID', 'Test', 'Date', 'Result', 'Unit', 'Status'])
 
@@ -385,14 +386,14 @@ def exportMedicalRecords():
             writer.writerow([record.patient_id, record.test.getAbbreviation(), record.date, record.result,
                              record.unit, record.status])
 
-    print("Medical records exported successfully to 'medical_records_export.csv'")
+    print("Medical records exported successfully to 'medical_records.csv'")
 
 
 
 def importMedicalRecords():
     import csv
 
-    with open('medical_records_import.csv', newline='') as csvfile:
+    with open('medical_records.csv', newline='') as csvfile:
         reader = csv.reader(csvfile)
         next(reader)  # Skip header row
 
@@ -405,5 +406,38 @@ def importMedicalRecords():
 
             medical_record = mrClass.MedicalRecord(patient_id, patient_medical_test, date, result, unit, status)
             medicalRecords.append(medical_record)
-
+            medical_record.addToMedicalRecord()
     print("Medical records imported successfully from 'medical_records_import.csv'")
+
+
+
+
+
+def importMedicalTests():
+    import csv
+    import ast
+
+    with open('medical_tests.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        next(reader)  # Skip header row
+
+        for row in reader:
+            test_name, test_abbreviation, temp_test_range, test_unit, test_date = row
+            test_range = ast.literal_eval(temp_test_range)
+
+            medical_test = mtClass(test_name, test_abbreviation, test_range, test_unit, test_date)
+            medicalTests.append(medical_test)
+            medical_test.addMedicalTest(mtClass.numberOfMedicalTests)
+
+
+
+
+def exportMedicalTests():
+    import csv
+
+    with open('medical_tests.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Name', 'Abbreviation','Range', 'Unit', 'Date'])
+
+        for test in medicalTests:
+            writer.writerow([test.test_name, test.abbreviation,test.test_range, test.unit, test.time_to_be_completed])

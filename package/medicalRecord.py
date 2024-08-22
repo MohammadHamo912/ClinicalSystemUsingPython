@@ -48,6 +48,10 @@ class MedicalRecord:
         file.close()
 
 
+
+    def getStatus(self):
+        return self.status
+
     # toString()
     def __str__(self):
-        return f"Patient ID: {self.patient_id}, Test: {self.test.getAbbreviation()}, Date: {self.date}, Result: {self.result}, Status: {self.status}"
+        return f"Patient ID: {self.patient_id}, Test: {self.test.getAbbreviation()}, Date: {self.date}, Result: {self.result}, Status: {self.status}, Result_Date : {self.result_date}"
