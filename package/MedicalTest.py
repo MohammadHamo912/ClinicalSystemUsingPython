@@ -51,13 +51,13 @@ class MedicalTest:
             else:
                 write_medical_test.write(line)
 
-    def deleteMedicalTest(self, testName):
-        readMedicalTest = open("medicalTest.txt", "r")
-        lines = readMedicalTest.readlines()
-        writeMedicalTest = open("medicalTest.txt", "w")
-        for line in lines:
-            if not line.startswith(testName):
-                writeMedicalTest.write(line)
+#   def deleteMedicalTest(self, testName):
+#        readMedicalTest = open("medicalTest.txt", "r")
+#        lines = readMedicalTest.readlines()
+#        writeMedicalTest = open("medicalTest.txt", "w")
+#        for line in lines:
+#            if not line.startswith(testName):
+#                writeMedicalTest.write(line)
 
     def getAbbreviation(self):
         return self.abbreviation

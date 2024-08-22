@@ -242,22 +242,35 @@ def filterMedicalTests():
         if validCheck.validTestAbbreviation(medicalTests, test_abbreviation):
             for test in medicalTests:
                 if test.getAbbreviation() == test_abbreviation:
-                    print(test)
+                    print(mtClass.printMedicalTest(test))
         else:
             print("No such Test abbreviation")
 
     if choice == 2:
-        first_test_range = float(input("Range is greater than or equal to: "))
-        second_test_range = float(input("Range is less than or equal to: "))
-        for test in medicalTests:
-            if test.getrange()[0] == first_test_range and test.getrange()[1] == second_test_range:
-                print(test)
+        first_input = input("Range is greater than or equal to (Leave empty if there is no lower limit): ")
+        second_input = input("Range is less than or equal to (Leave empty if there is no upper limit): ")
+        first_test_range = float(first_input) if first_input else -1
+        second_test_range = float(second_input) if second_input else -1
+
+        if first_test_range == -1 and second_test_range == -1:
+            for test in medicalTests:
+                print(mtClass.printMedicalTest(test))
+        else:
+            for test in medicalTests:
+                if test.getRange()[0] >= first_test_range and test.getRange()[1] <= second_test_range:
+                    print(mtClass.printMedicalTest(test))
+            for test in medicalTests:
+                if first_test_range == -1 and second_test_range >= test.getRange()[1]:
+                    print(mtClass.printMedicalTest(test))
+            for test in medicalTests:
+                if first_test_range >= test.getRange()[0] and second_test_range == -1:
+                    print(mtClass.printMedicalTest(test))
 
     if choice == 3:
         unit=input("Enter the unit: ")
         for test in medicalTests:
-            if test.getUnitOfTest() == unit:
-                print(test)
+            if test.getUnit() == unit:
+                print(mtClass.printMedicalTest(test))
 
     if choice == 4:
         print("Choose a choice")
@@ -268,21 +281,21 @@ def filterMedicalTests():
         if choice == 3:
             execution_time = input("Enter the execution time (dd:hh:mm): ")
             for test in medicalTests:
-                if test.getExecutionTime() == execution_time:
-                    print(test)
+                if test.getTimeToBeCompleted == execution_time:
+                    print(mtClass.printMedicalTest(test))
 
         elif choice == 2:
             execution_time = input("Enter the max execution time (dd:hh:mm): ")
             for test in medicalTests:
-                if test.getExecutionTime() < execution_time:
-                    print(test)
+                if test.getTimeToBeCompleted < execution_time:
+                    print(mtClass.printMedicalTest(test))
 
         elif choice == 1:
 
             execution_time = input("Enter the min execution time (dd:hh:mm): ")
             for test in medicalTests:
-                if test.getExecutionTime() > execution_time:
-                    print(test)
+                if test.getTimeToBeCompleted > execution_time:
+                    print(mtClass.printMedicalTest(test))
 
         else:
             print("Invalid choice")
@@ -342,14 +355,14 @@ def deleteMedicalRecord():
                 print("That's not a valid test status")
                 return
 
-def deleteMedicalTest():
-    test_abbreviation=input("Enter the test Abbreviation you want to delete: ")
-    if validCheck.validTestAbbreviation(medicalTests, test_abbreviation):
-        for record in medicalRecords:
-            if record.abbreviation == test_abbreviation:
-                medicalRecords.remove(record)
-    else:
-        print("That's not a valid test abbreviation")
+#def deleteMedicalTest():
+    #test_abbreviation=input("Enter the test Abbreviation you want to delete: ")
+    #if validCheck.validTestAbbreviation(medicalTests, test_abbreviation):
+       # for record in medicalRecords:
+      #      if record.abbreviation == test_abbreviation:
+     #           medicalRecords.remove(record)
+    #else:
+        #print("That's not a valid test abbreviation")
 
 
 def generateTextualSummary():

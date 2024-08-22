@@ -1,5 +1,5 @@
 import package as fn
-
+from package import *
 
 def menu():
     print("Welcome to The Clinical System")
@@ -29,10 +29,10 @@ def menu():
             fn.updateMedicalTest()
         elif choice == 5:
             fn.filterMedicalRecords()
+        elif choice == 6:
+            functions.filterMedicalTests()
         elif choice == 7:
             fn.deleteMedicalRecord()
-        elif choice == 8:
-            fn.deleteMedicalTest()
         else:
             break
 
