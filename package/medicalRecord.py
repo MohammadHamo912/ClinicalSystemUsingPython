@@ -1,5 +1,3 @@
-# replace the test_abbreviation with the object test and show its abbreviation as an identity
-
 class MedicalRecord:
     records = []
 
@@ -85,10 +83,6 @@ class MedicalRecord:
 
     def setStatus(self, status):
         self.status = status
-
-
-
-
 
 
 
