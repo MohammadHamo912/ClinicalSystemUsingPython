@@ -1,6 +1,8 @@
 import package as fn
 
 
+fn.medicalSystemSetUP()
+
 def menu():
     print("Welcome to The Clinical System")
     while True:
@@ -33,16 +35,23 @@ def menu():
             fn.deleteMedicalRecord()
         elif choice == 8:
             fn.deleteMedicalTest()
+        elif choice == 10:
+            fn.exportMedicalRecords()
+        elif choice == 11:
+            fn.importMedicalRecords()
+
+        elif choice == 0:
+            break
         else:
             break
 
 
-
-
-
-
-
 menu()
+fn.medicalSystemShutDown()
+
+
+
+
 '''  
         elif choice == 5:
             fn.displayMedicalRecords()
@@ -54,10 +63,6 @@ menu()
             fn.deleteMedicalTest()
         elif choice == 9:
             fn.generateTextualSummary()
-        elif choice == 10:
-            fn.exportMedicalRecords()
-        elif choice == 11:
-            fn.importMedicalRecords()
         elif choice == 0:
             break
     '''
