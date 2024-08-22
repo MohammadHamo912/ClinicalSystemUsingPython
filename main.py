@@ -1,5 +1,5 @@
 import package as fn
-
+from package import *
 
 fn.medicalSystemSetUP()
 
@@ -33,8 +33,7 @@ def menu():
             fn.filterMedicalRecords()
 
         elif choice == 6:
-            fn.filterMedicalRecords()
-
+            functions.filterMedicalTests()
         elif choice == 7:
             fn.deleteMedicalRecord()
         elif choice == 8:
