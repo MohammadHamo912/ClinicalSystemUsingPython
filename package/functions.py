@@ -273,7 +273,7 @@ def time_to_minutes(time_str):
         print(f"Error: Invalid time format '{time_str}'. Expected format is 'dd-hh-mm'.")
         return None
 
-def deleteMedicalRecord():
+def deleteMedicalRecord(medicalRecords):
         tempList=[]
         print("How would you like to delete a record: ")
         print("1. Patient ID")
@@ -282,23 +282,21 @@ def deleteMedicalRecord():
         print("4. Test Status")
         choice = int(input())
 
-        if choice==1:
+        if choice == 1:
             patient_id = int(input("Enter the patient ID: "))
             if validCheck.validPatientID(patient_id):
-                for record in medicalRecords:
-                    if record.patient_id == patient_id:
-                        tempList.append(record)
-                if tempList == []:
+                tempList = [record for record in medicalRecords if record.patient_id == patient_id]
+                if not tempList:
                     print("No such patient")
                     return
                 else:
                     for record in tempList:
                         print(record)
-                    tempList=[]
-                second_choice=input("what test name would you like to delete: ")
-                for record in tempList:
-                    if record.testName == second_choice:
-                        medicalRecords.remove(record)
+
+                    second_choice = input("What test name would you like to delete: ")
+
+                    updated_records = [record for record in medicalRecords if not (record.patient_id == patient_id and record.testName == second_choice)]
+                    medicalRecords = updated_records
             else:
                 print("That's not a valid patient ID")
                 return
