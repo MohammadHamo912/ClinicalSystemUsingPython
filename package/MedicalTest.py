@@ -69,3 +69,17 @@ class MedicalTest:
 
     def getTimeToBeCompleted(self):
         return self.time_to_be_completed
+
+    def remove(self):
+        with open("medicalTest.txt", 'r') as file:
+            tests = file.readlines()
+        updated_tests = []
+        test_to_remove = f"{self.test_name}: {self.abbreviation}"
+        for test in tests:
+            if not test.startswith(test_to_remove):
+                updated_tests.append(test)
+
+        with open("medicalRecord.txt", 'w') as file:
+            file.writelines(updated_tests)
+
+        file.close()
