@@ -108,18 +108,93 @@ def addNewMedicalRecord():
 def updateMedicalRecord():
     patient_id = input("Enter the patient ID: ")
     test_abbreviation = input("Enter the test abbreviation: ")
+    date = input("Enter the test Date")
+    result = input("Enter the record result")
+    status = input("Enter the record status")
 
     for record in medicalRecords:
-        if record.patient_id == patient_id and record.test.getAbbreviation() == test_abbreviation:
-            new_status = input("Enter new status: ")
-            new_result = input("Enter new result: ")
+        if (record.patient_id == patient_id and record.test.getAbbreviation() == test_abbreviation
+                and record.date == date and record.result == result and record.status == status):
 
-            record.updateRecord(result=new_result, status=new_status)
-            print("Record updated successfully")
-            return
+            print("Enter the new patient ID: (or enter nothing if you dont want to change)")
+            new_patient_id = input()
+            if new_patient_id == None:
+                new_patient_id = patient_id
+            else:
+                while not validCheck.validPatientID(new_patient_id):
+                    print("Wrong Patient ID, please try again")
+                    new_patient_id = input()
+
+
+            print("Enter the new record test's abbreviation (or enter nothing if you dont want to change)")
+            new_test_abbreviation = input()
+            if new_test_abbreviation == None:
+                new_test_abbreviation = test_abbreviation
+            else:
+                while not validCheck.validTestAbbreviation(medicalTests, new_test_abbreviation):
+                    print("Wrong Test Abbreviation, please try again")
+                    new_test_abbreviation = input()
+
+                for test in medicalTests:
+                    if test.getAbbreviation() == test_abbreviation:
+                        patient_medical_test = test
+
+            print("Enter the date of the updated test (YYYY-MM-DD hh:mm)(or enter nothing if you dont want to change)")
+            new_date = input()
+            if new_date == None:
+                new_date = date
+            else:
+                while True:
+                    try:
+                        if validCheck.validDate(date):
+                            print("Valid Date")
+                            break
+                        else:
+                            print("Invalid Date")
+                            new_date = input()
+                    except ValueError:
+                        print("Invalid date ")
+                        new_date = input()
+
+
+
+
+            print("Enter your updated test result (or enter nothing if you dont want to change)")
+            new_result = input()
+            if new_result == None:
+                new_result = result
+
+            else:
+
+                while not validCheck.validResult(new_result):
+                    print("Wrong Medical Record, please try again")
+                    new_result = input()
+
+            print("Enter the record status (or enter nothing if you dont want to change)")
+            new_status = input()
+            if new_status == None:
+                new_status = status
+            else:
+                while not validCheck.validStatus(status):
+                    print("Wrong Record Status, please try again")
+                    new_status = input()
+
+
+            unit = validCheck.getUnit(medicalTests, new_test_abbreviation)
+            record.setPatientID(new_patient_id)
+            record.setTest(patient_medical_test)
+            record.setDate(new_date)
+            record.setResult(new_result)
+            record.setStatus(new_status)
+
+
+            medicalRecords.append(record)
+            break
+
+            exportMedicalRecords()
+
 
     print("Record not found.")
-
 
 def updateMedicalTest():
     test_name = input("Enter the name of the medical test to update: ")

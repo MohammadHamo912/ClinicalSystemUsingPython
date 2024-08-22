@@ -1,5 +1,3 @@
-# replace the test_abbreviation with the object test and show its abbreviation as an identity
-
 class MedicalRecord:
     records = []
 
@@ -11,7 +9,23 @@ class MedicalRecord:
         self.unit = unit
         self.status = status
         if status == "Completed":
-            self.result_date = self.test.getTimeToBeCompleted()
+            from datetime import datetime, timedelta
+
+            first = self.date
+            second = self.test.getTimeToBeCompleted()
+
+            first_datetime = datetime.strptime(first, "%Y-%m-%d %H:%M")
+            second_parts = second.split("-")
+            days = int(second_parts[0])
+            hours = int(second_parts[1])
+            minutes = int(second_parts[2])
+
+            second_datetime = timedelta(days=days,hours=hours, minutes=minutes)
+            result = first_datetime+second_datetime
+            result_date = result.strftime("%Y-%m-%d %H:%M")
+
+
+            self.result_date = result_date
         else:
             self.result_date = None
 
@@ -52,6 +66,28 @@ class MedicalRecord:
     def getStatus(self):
         return self.status
 
+    def setPatientID(self, patient_id):
+        self.patient_id = patient_id
+
+    def setTest(self, test):
+        self.test = test
+
+    def setDate(self, date):
+        self.date = date
+
+    def setResult(self, result):
+        self.result = result
+
+    def setUnit(self, unit):
+        self.unit = unit
+
+    def setStatus(self, status):
+        self.status = status
+
+
+
+
     # toString()
+
     def __str__(self):
         return f"Patient ID: {self.patient_id}, Test: {self.test.getAbbreviation()}, Date: {self.date}, Result: {self.result}, Status: {self.status}, Result_Date : {self.result_date}"
