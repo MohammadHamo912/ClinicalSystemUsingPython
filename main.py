@@ -31,6 +31,10 @@ def menu():
             fn.updateMedicalTest()
         elif choice == 5:
             fn.filterMedicalRecords()
+
+        elif choice == 6:
+            fn.filterMedicalRecords()
+
         elif choice == 7:
             fn.deleteMedicalRecord()
         elif choice == 8:
@@ -53,16 +57,6 @@ fn.medicalSystemShutDown()
 
 
 '''  
-        elif choice == 5:
-            fn.displayMedicalRecords()
-        elif choice == 6:
-            fn.displayMedicalTest()
-        elif choice == 7:
-            fn.deleteMedicalRecord()
-        elif choice == 8:
-            fn.deleteMedicalTest()
         elif choice == 9:
             fn.generateTextualSummary()
-        elif choice == 0:
-            break
-    '''
+      '''
