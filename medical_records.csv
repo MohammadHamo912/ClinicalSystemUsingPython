@@ -2,3 +2,4 @@ Patient ID,Test,Date,Result,Unit,Status
 1111111,Hgb,2024-08-29 15:12,19,g/dL,Pending
 2222222,LDL,2022-12-31 12:15,95,mg/dL,Completed
 1233214,systole,2025-12-01 00:12,100,mm Hg,Completed
+3211236,diastole,2025-12-12 12:56,118,mm Hg,Completed
