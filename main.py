@@ -1,10 +1,10 @@
 import package as fn
 from package import *
-
 fn.medicalSystemSetUP()
 
 def menu():
     print("Welcome to The Clinical System")
+    all_tests = open("medicalTest.txt", "r")
     while True:
         print("1- Add new medical record")
         print("2- Add new medical test")
@@ -37,6 +37,8 @@ def menu():
             fn.deleteMedicalRecord()
         elif choice == 8:
             functions.deleteMedicalTest()
+        elif choice == 9:
+            functions.generateSummaryReports(all_tests)
         elif choice == 10:
             fn.exportMedicalRecords()
         elif choice == 11:

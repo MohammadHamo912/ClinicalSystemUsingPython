@@ -699,3 +699,126 @@ def changeResultDate(record):
     result = first_datetime + second_datetime
     result_date = result.strftime("%Y-%m-%d %H:%M")
     record.result_date = result_date
+
+
+def generateSummaryReports(all_tests):
+    def get_summary_criteria():
+        print("Select criteria for generating the summary report:")
+        print("1 - By Test Name")
+        print("2 - By Abnormality")
+        print("3 - By Status")
+
+        choice = input("Enter your choice (1/2/3): ")
+        if choice not in ['1', '2', '3']:
+            print("Invalid choice. Defaulting to all criteria.")
+            choice = '1'
+        return choice
+
+    def filter_tests(tests, criteria, value=None):
+        if criteria == '1':
+            if value:
+                return [test for test in tests if mtClass.getTestName(test) == value]
+            return tests
+        elif criteria == '2':
+            if value is not None:
+                return [test for test in tests if validCheck.upNormalResult(test) == value]
+            return tests
+        elif criteria == '3':
+            if value:
+                return [test for test in tests if test.getStatus() == value]
+            return tests
+        return tests
+
+    criteria = get_summary_criteria()
+
+    value = None
+    if criteria in ['1', '3']:
+        value = input("Enter the value to filter by: ")
+
+    filtered_tests = filter_tests(all_tests, criteria, value)
+
+    if not filtered_tests:
+        print("No records found to generate a summary.")
+        return
+
+    min_values = {}
+    max_values = {}
+    total_values = {}
+    counts = {}
+
+    min_times = {}
+    max_times = {}
+    total_times = {}
+
+    abnormal_count = {'Abnormal': 0, 'Normal': 0}
+    status_count = {}
+
+    for test in filtered_tests:
+        test_name = test.getTestName()
+        abnormal = test.isAbnormal()
+        status = test.getStatus()
+
+        # Initialize dictionaries for new criteria
+        if test_name not in min_values:
+            min_values[test_name] = float('inf')
+            max_values[test_name] = float('-inf')
+            total_values[test_name] = 0
+            counts[test_name] = 0
+
+        if test_name not in min_times:
+            min_times[test_name] = float('inf')
+            max_times[test_name] = float('-inf')
+            total_times[test_name] = 0
+
+        test_range = test.getRange()
+        test_value = test_range[0] if test_range[0] != 0 else test_range[1]
+        min_values[test_name] = min(min_values[test_name], test_value)
+        max_values[test_name] = max(max_values[test_name], test_value)
+        total_values[test_name] += test_value
+        counts[test_name] += 1
+
+        test_time = time_to_minutes(test.getTimeToBeCompleted())
+        min_times[test_name] = min(min_times[test_name], test_time)
+        max_times[test_name] = max(max_times[test_name], test_time)
+        total_times[test_name] += test_time
+
+        # Update abnormality counts
+        if abnormal:
+            abnormal_count['Abnormal'] += 1
+        else:
+            abnormal_count['Normal'] += 1
+
+        # Update status counts
+        if status in status_count:
+            status_count[status] += 1
+        else:
+            status_count[status] = 1
+
+    # Print results
+    print("\nSummary Report:")
+    for test_name in min_values:
+        average_value = total_values[test_name] / counts[test_name]
+        average_time = total_times[test_name] / counts[test_name]
+
+        print(f"\nTest Name: {test_name}")
+        print(f"Minimum Test Value: {min_values[test_name]}")
+        print(f"Maximum Test Value: {max_values[test_name]}")
+        print(f"Average Test Value: {average_value:.2f}")
+
+        print(f"Minimum Turnaround Time: {minutes_to_time(min_times[test_name])}")
+        print(f"Maximum Turnaround Time: {minutes_to_time(max_times[test_name])}")
+        print(f"Average Turnaround Time: {minutes_to_time(average_time)}")
+
+    print("\nAbnormality Summary:")
+    print(f"Abnormal Tests: {abnormal_count['Abnormal']}")
+    print(f"Normal Tests: {abnormal_count['Normal']}")
+
+    print("\nStatus Summary:")
+    for status, count in status_count.items():
+        print(f"Status: {status} - Count: {count}")
+
+def minutes_to_time(minutes):
+    days = minutes // (24 * 60)
+    hours = (minutes % (24 * 60)) // 60
+    minutes = minutes % 60
+    return f"{days:02d}-{hours:02d}-{minutes:02d}"
