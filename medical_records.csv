@@ -9,4 +9,4 @@ Patient ID,Test,Date,Result,Unit,Status
 6547893,LDL,2016-05-1 0:0,90,mg/dL,Pending
 7894563,Yk,2020-1-1 0:0,70,mg/dL,Completed
 1234567,Yk,2012-05-19 20:15,60,liter,Completed
-1234567,Yg,2015-06-09 0:0,80,mg,Completed
+1234567,Yig,2015-06-09 0:0,80,mg,Completed
