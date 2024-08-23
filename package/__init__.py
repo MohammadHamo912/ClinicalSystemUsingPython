@@ -21,3 +21,4 @@ from .functions import exportMedicalRecords
 from .functions import importMedicalTests
 from .functions import exportMedicalTests
 
+from .functions import generateSummaryReports

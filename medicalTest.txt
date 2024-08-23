@@ -3,6 +3,3 @@
 3. Name: LDL Cholesterol Low-Density Lipoprotein (LDL); Range: < 100.0; Unit: mg/dL, 00-17-06 
 4. Name: Systolic Blood Pressure (systole); Range: < 120.0; Unit: mm Hg, 00-08-04 
 5. Name: Diastolic Blood Pressure (diastole); Range: < 80.0; Unit: mm Hg, 00-10-00 
-6. Name: Yanal is gentle (Yg); Range: < 80.0; Unit: mg, 01-02-00 
-7. Name: Yanal is khawal (Yk); Range: > 20.0, < 100.0; Unit: mg/dL, 0-5-1 
-8. Name: Yanal is lovely (YL); Range: > 50.0, ; Unit: yani, 0-0-01 

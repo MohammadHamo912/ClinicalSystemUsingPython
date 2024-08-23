@@ -38,7 +38,7 @@ def menu():
         elif choice == 8:
             functions.deleteMedicalTest()
         elif choice == 9:
-            functions.generateSummaryReports(all_tests)
+            functions.generateSummaryReports()
         elif choice == 10:
             fn.exportMedicalRecords()
         elif choice == 11:
