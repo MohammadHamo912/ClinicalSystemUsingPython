@@ -17,6 +17,7 @@ def medicalSystemSetUP():
     importMedicalTests()
     importMedicalRecords()
 
+
 def medicalSystemShutDown():
     exportMedicalTests()
     exportMedicalRecords()
@@ -104,97 +105,100 @@ def addNewMedicalRecord():
     return
 
 
-
 def updateMedicalRecord():
-    patient_id = input("Enter the patient ID: ")
-    test_abbreviation = input("Enter the test abbreviation: ")
-    date = input("Enter the test Date")
-    result = input("Enter the record result")
-    status = input("Enter the record status")
+    tempList = medicalRecords.copy()
 
+    # Print all records
     for record in medicalRecords:
-        if (record.patient_id == patient_id and record.test.getAbbreviation() == test_abbreviation
-                and record.date == date and record.result == result and record.status == status):
+        print(record)
 
-            print("Enter the new patient ID: (or enter nothing if you dont want to change)")
-            new_patient_id = input()
-            if new_patient_id == None:
-                new_patient_id = patient_id
-            else:
-                while not validCheck.validPatientID(new_patient_id):
-                    print("Wrong Patient ID, please try again")
-                    new_patient_id = input()
+    # Get and validate patient ID
+    patient_id = input("Enter the patient ID: ")
+    while not validCheck.validPatientID(patient_id):
+        print("Wrong Patient ID, please try again.")
+        patient_id = input("Enter the patient ID: ")
 
+    # Filter records by patient ID
+    tempList = [record for record in tempList if record.patient_id == patient_id]
 
-            print("Enter the new record test's abbreviation (or enter nothing if you dont want to change)")
-            new_test_abbreviation = input()
-            if new_test_abbreviation == None:
-                new_test_abbreviation = test_abbreviation
-            else:
-                while not validCheck.validTestAbbreviation(medicalTests, new_test_abbreviation):
-                    print("Wrong Test Abbreviation, please try again")
-                    new_test_abbreviation = input()
+    # If no records found, exit early
+    if not tempList:
+        print("No records found for the given patient ID.")
+        return
 
-                for test in medicalTests:
-                    if test.getAbbreviation() == test_abbreviation:
-                        patient_medical_test = test
+    # Print filtered records
+    for record in tempList:
+        print(record)
 
-            print("Enter the date of the updated test (YYYY-MM-DD hh:mm)(or enter nothing if you dont want to change)")
-            new_date = input()
-            if new_date == None:
-                new_date = date
-            else:
-                while True:
-                    try:
-                        if validCheck.validDate(date):
-                            print("Valid Date")
-                            break
-                        else:
-                            print("Invalid Date")
-                            new_date = input()
-                    except ValueError:
-                        print("Invalid date ")
-                        new_date = input()
+    # Get and validate additional details
+    test_abbreviation = input("Enter the test abbreviation: ")
+    while not validCheck.validTestAbbreviation(medicalTests, test_abbreviation):
+        print("Wrong Test Abbreviation, please try again")
+        test_abbreviation = input("Enter new Test Abbreviation: ")
 
+    date = input("Enter the test Date (YYYY-MM-DD hh:mm): ")
+    while not validCheck.validDate(date):
+        print("Wrong Test Date, please try again")
+        date = input("Enter new Test Date: ")
+    # Search for the specific record
+    for record in medicalRecords:
+        if (record.patient_id == patient_id and
+                record.test.getAbbreviation() == test_abbreviation and
+                record.date == date):
 
+            while True:
+                print("What do you want to update in the record: ")
+                print("1. Patient ID")
+                print("2. Test abbreviation")
+                print("3. Test date")
+                print("4. Test result")
+                print("5. Status")
+                print("6. Exit")
+                choice = int(input("Enter your choice: "))
 
+                # Collect new details based on user choice
+                if choice == 1:
+                    new_patient_id = input("Enter new Patient ID: ")
+                    while not validCheck.validPatientID(new_patient_id):
+                        print("Wrong Patient ID, please try again")
+                        new_patient_id = input("Enter new Patient ID: ")
+                    record.setPatientID(new_patient_id)
+                elif choice == 2:
+                    new_test_abb = input("Enter new Test abbreviation: ")
+                    while not validCheck.validTestAbbreviation(medicalTests, new_test_abb):
+                        print("Wrong Test Abbreviation, please try again")
+                        new_test_abb = input("Enter new Test Abbreviation: ")
+                    record.setTest(new_test_abb)
+                elif choice == 3:
+                    new_date = input("Enter new Test date (YYYY-MM-DD hh:mm): ")
+                    while not validCheck.validDate(new_date):
+                        print("Wrong Test Date, please try again")
+                        new_date = input("Enter new Test date: ")
+                    record.setDate(new_date)
+                elif choice == 4:
+                    new_result = input("Enter new Test result: ")
+                    while not validCheck.validResult(new_result):
+                        print("Wrong Test Result, please try again")
+                        new_result = input("Enter new Test result: ")
+                    record.setResult(new_result)
+                elif choice == 5:
+                    new_status = input("Enter new Test status: ")
+                    while not validCheck.validStatus(new_status):
+                        print("Wrong Test Status, please try again")
+                        new_status = input("Enter new Test status: ")
+                    record.setStatus(new_status)
+                elif choice == 6:
+                    break
+                else:
+                    print("Invalid choice, please try again.")
 
-            print("Enter your updated test result (or enter nothing if you dont want to change)")
-            new_result = input()
-            if new_result == None:
-                new_result = result
-
-            else:
-
-                while not validCheck.validResult(new_result):
-                    print("Wrong Medical Record, please try again")
-                    new_result = input()
-
-            print("Enter the record status (or enter nothing if you dont want to change)")
-            new_status = input()
-            if new_status == None:
-                new_status = status
-            else:
-                while not validCheck.validStatus(status):
-                    print("Wrong Record Status, please try again")
-                    new_status = input()
-
-
-            unit = validCheck.getUnit(medicalTests, new_test_abbreviation)
-            record.setPatientID(new_patient_id)
-            record.setTest(patient_medical_test)
-            record.setDate(new_date)
-            record.setResult(new_result)
-            record.setStatus(new_status)
-
-
-            medicalRecords.append(record)
-            break
-
+            # Save updates to persistent storage
             exportMedicalRecords()
-
+            print("Record updated successfully.")
+            return
 
     print("Record not found.")
+
 
 def updateMedicalTest():
     test_name = input("Enter the name of the medical test to update: ")
@@ -294,10 +298,6 @@ def filterMedicalTests():
             print("No such test abbreviation")
 
     elif choice == 2:
-        #case1 ( both empty ) Done
-        #case2 ( first empty, the second not empty ) Done
-        #case3 ( first not empty, the second empty ) Not Done ( no result is displayed)
-        #case4 ( both not empty ) Not Done ( just the first one is displayed)
         first_input = input("Range is greater than or equal to (Leave empty if there is no lower limit): ")
         second_input = input("Range is less than or equal to (Leave empty if there is no upper limit): ")
 
@@ -306,7 +306,7 @@ def filterMedicalTests():
 
         for test in medicalTests:
             test_range = test.getRange()
-            if first_test_range <= test_range[0] and second_test_range >= test_range[1]:
+            if (first_test_range <= test_range[0] and second_test_range >= test_range[1]):
                 print(mtClass.printMedicalTest(test))
 
     elif choice == 3:
@@ -348,64 +348,86 @@ def time_to_minutes(time_str):
         print(f"Error: Invalid time format '{time_str}'. Expected format is 'dd-hh-mm'.")
         return None
 
-def deleteMedicalRecord(medicalRecords):
-        tempList=[]
-        print("How would you like to delete a record: ")
-        print("1. Patient ID")
-        print("2. Test Name")
-        print("3. Specific Date")
-        print("4. Test Status")
-        choice = int(input())
+def deleteMedicalRecord():
+    print("How would you like to delete a record:")
+    print("1. Patient ID")
+    print("2. Test Name")
+    print("3. Specific Date Range")
+    print("4. Test Status")
+    choice = input("Enter your choice: ").strip()
 
-        if choice == 1:
-            patient_id = int(input("Enter the patient ID: "))
-            if validCheck.validPatientID(patient_id):
-                tempList = [record for record in medicalRecords if record.patient_id == patient_id]
-                if not tempList:
-                    print("No such patient")
-                    return
-                else:
-                    for record in tempList:
-                        print(record)
+    if choice == '1':
+        patient_id = input("Enter the patient ID: ").strip()
+        tempList = [record for record in medicalRecords if record.patient_id == patient_id]
 
-                    second_choice = input("What test name would you like to delete: ")
-
-                    updated_records = [record for record in medicalRecords if not (record.patient_id == patient_id and record.testName == second_choice)]
-                    medicalRecords = updated_records
-            else:
-                print("That's not a valid patient ID")
-                return
-
-        elif choice == 2:
-            test_name = input("Enter test name you want to delete from the records: ")
-            for record in medicalRecords:
-                if record.testName == test_name:
-                    medicalRecords.remove(record)
-
-        elif choice == 3:
-            start_date = input("Enter the start date of delete (YYYY-MM-DD): ")
-            finish_date = input("Enter the end date of delete (YYYY-MM-DD): ")
-            if validCheck.validDate(start_date) and validCheck.validDate(finish_date):
-                for record in medicalRecords:
-                    if record.date >= start_date and record.date <= finish_date:
-                        medicalRecords.remove(record)
-            else:
-                    print("That's not a valid date range")
-                    return
-        elif choice == 4:
-            status = input("Enter test status: ")
-            if validCheck.validStatus(status):
-                for record in medicalRecords:
-                    if record.status == status:
-                        medicalRecords.remove(record)
-            else:
-                print("That's not a valid test status")
-
-                return
-
-        else :
-            print("Invalid Choice")
+        if not tempList:
+            print(f"No records found for patient ID '{patient_id}'.")
             return
+
+        print("Records found:")
+        for record in tempList:
+            print(record)
+
+        test_name = input(
+            "Enter the test name you would like to delete (or press Enter to delete all records for this patient): ").strip().lower()
+
+        if test_name:
+            matching_records = [record for record in tempList if record.test.getAbbreviation().lower() == test_name]
+            if not matching_records:
+                print(f"No records found for test name '{test_name}' for patient ID '{patient_id}'.")
+                return
+
+            print("The following records will be deleted:")
+            for record in matching_records:
+                print(record)
+
+            confirm = input("Are you sure you want to delete these records? (yes/no): ").strip().lower()
+            if confirm == "yes":
+                medicalRecords[:] = [record for record in medicalRecords if not (
+                        record.patient_id == patient_id and record.test.getAbbreviation().lower() == test_name)]
+                print("Records have been deleted.")
+            else:
+                print("Deletion canceled.")
+        else:
+            confirm = input(
+                f"Are you sure you want to delete all records for patient ID '{patient_id}'? (yes/no): ").strip().lower()
+            if confirm == "yes":
+                medicalRecords[:] = [record for record in medicalRecords if record.patient_id != patient_id]
+                print("All records for this patient have been deleted.")
+            else:
+                print("Deletion canceled.")
+
+
+    elif choice == '2':
+        test_name = input("Enter the test name you want to delete from the records: ").strip().lower()
+        updated_records = [record for record in medicalRecords if record.test.getAbbreviation().lower() != test_name]
+        medicalRecords[:] = updated_records
+        print(f"Records with test name '{test_name}' have been deleted.")
+
+    elif choice == '3':
+        start_date = input("Enter the start date for deletion (YYYY-MM-DD): ").strip()
+        finish_date = input("Enter the end date for deletion (YYYY-MM-DD): ").strip()
+
+        try:
+            updated_records = [record for record in medicalRecords if not (start_date <= record.date.split(' ')[0] <= finish_date)]
+            medicalRecords[:] = updated_records
+            print(f"Records between dates '{start_date}' and '{finish_date}' have been deleted.")
+        except ValueError:
+            print("Invalid date format. Please use 'YYYY-MM-DD'.")
+
+    elif choice == '4':
+        status = input("Enter the test status: ").strip().lower()
+        updated_records = [record for record in medicalRecords if record.status.lower() != status]
+        medicalRecords[:] = updated_records
+        print(f"Records with status '{status}' have been deleted.")
+
+    else:
+        print("Invalid Choice.")
+        return
+
+    print("Deletion completed. Updated records:")
+    for record in medicalRecords:
+        print(record)
 
 def deleteMedicalTest():
     test_abbreviation=input("Enter the test Abbreviation you want to delete: ")

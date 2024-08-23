@@ -40,8 +40,11 @@ class MedicalRecord:
             self.result_date = result_date
 
     def addToMedicalRecord(self):
+        abbreviation = "Unknown"
+        if self.test is not None:
+            abbreviation = self.test.getAbbreviation()
         with open("medicalRecord.txt", 'a') as file:
-            record = f"{self.patient_id}: {self.test.getAbbreviation()}, {self.date}, {self.result}, {self.unit}, {self.status}"
+            record = f"{self.patient_id}: {abbreviation}, {self.date}, {self.result}, {self.unit}, {self.status}"
             if self.result_date:
                 record += f", {self.result_date}"
             record += "\n"
@@ -84,10 +87,14 @@ class MedicalRecord:
     def setStatus(self, status):
         self.status = status
 
-
+    def getTest(self):
+        return self.test
 
 
     # toString()
 
     def __str__(self):
-        return f"Patient ID: {self.patient_id}, Test: {self.test.getAbbreviation()}, Date: {self.date}, Result: {self.result}, Status: {self.status}, Result_Date : {self.result_date}"
+        abbreviation = "Unknown"
+        if self.test is not None:
+            abbreviation = self.test.getAbbreviation()
+        return f"Patient ID: {self.patient_id}, Test: {abbreviation}, Date: {self.date}, Result: {self.result}, Status: {self.status}, Result_Date : {self.result_date}"

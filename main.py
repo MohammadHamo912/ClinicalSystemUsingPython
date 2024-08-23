@@ -50,11 +50,3 @@ def menu():
 
 menu()
 fn.medicalSystemShutDown()
-
-
-
-
-'''  
-        elif choice == 9:
-            fn.generateTextualSummary()
-      '''
