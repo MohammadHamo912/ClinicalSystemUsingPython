@@ -34,8 +34,9 @@ class MedicalTest:
 
 
 
-    def printMedicalTest(self ,numberOfMedicalTests):
-        print(f"{numberOfMedicalTests}. Name: {self.test_name} ({self.abbreviation}); Range:",end = " ")
+    def printMedicalTest(self):
+
+        print(f"Name: {self.test_name} ({self.abbreviation}); Range:",end = " ")
 
         if int(self.test_range[0]) != 0:
             print(
@@ -46,18 +47,13 @@ class MedicalTest:
 
         print(f"; Unit: {self.unit}, {self.time_to_be_completed} \n")
 
-    def updateMedicalTest(self, testName, newRange):
-        read_medical_tests = open("medicalTest.txt", "r")
-        lines = read_medical_tests.readlines()
+    def updateMedicalTest(self, test_name, abbreviation, test_range, unit, time_to_be_completed):
+        self.test_name = test_name
+        self.abbreviation = abbreviation
+        self.test_range = test_range
+        self.unit = unit
+        self.time_to_be_completed = time_to_be_completed
 
-        write_medical_test = open("medicalTest.txt", "w")
-        for line in lines:
-            if line.startswith(testName):
-                parts = line.strip().split(',')
-                parts[2] = newRange
-                write_medical_test.write(','.join(parts) + '\n')
-            else:
-                write_medical_test.write(line)
 
 #   def deleteMedicalTest(self, testName):
 #        readMedicalTest = open("medicalTest.txt", "r")

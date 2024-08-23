@@ -1,3 +1,4 @@
+
 from . import medicalRecord as mrClass, MedicalTest
 from . import validityCheck as validCheck
 from . import MedicalTest as mtClass
@@ -53,9 +54,11 @@ def addNewMedicalTest():
 
     print("Enter the time to be completed for this medical test: (Form : DD-hh-mm)")
     time_to_be_completed = input()
+    #check the validity for this
+
     medical_test = mtClass(name, abbreviation, test_range, unit, time_to_be_completed)
 
-    medical_test.addMedicalTest(MedicalTest.numberOfMedicalTests)
+    medical_test.addMedicalTest()
     medicalTests.append(medical_test)
     print(medical_test.getAbbreviation(), "is added successfully to medical tests")
 
@@ -165,40 +168,55 @@ def updateMedicalRecord():
                 print("4. Test result")
                 print("5. Status")
                 print("6. Exit")
-                choice = int(input("Enter your choice: "))
+                choice = input("Enter your choice: ")
 
                 # Collect new details based on user choice
-                if choice == 1:
+                if choice == "1":
                     new_patient_id = input("Enter new Patient ID: ")
                     while not validCheck.validPatientID(new_patient_id):
                         print("Wrong Patient ID, please try again")
                         new_patient_id = input("Enter new Patient ID: ")
                     record.setPatientID(new_patient_id)
-                elif choice == 2:
+
+
+                elif choice == "2":
                     new_test_abb = input("Enter new Test abbreviation: ")
                     while not validCheck.validTestAbbreviation(medicalTests, new_test_abb):
                         print("Wrong Test Abbreviation, please try again")
                         new_test_abb = input("Enter new Test Abbreviation: ")
-                    record.setTest(new_test_abb)
-                elif choice == 3:
+
+                    for test in medicalTests:
+                        if test.getAbbreviation() == new_test_abb:
+                            record.setTest(test)
+
+                    changeResultDate(record)
+
+                elif choice == "3":
                     new_date = input("Enter new Test date (YYYY-MM-DD hh:mm): ")
                     while not validCheck.validDate(new_date):
                         print("Wrong Test Date, please try again")
                         new_date = input("Enter new Test date: ")
                     record.setDate(new_date)
-                elif choice == 4:
+                    changeResultDate(record)
+
+                elif choice == "4":
                     new_result = input("Enter new Test result: ")
                     while not validCheck.validResult(new_result):
                         print("Wrong Test Result, please try again")
                         new_result = input("Enter new Test result: ")
                     record.setResult(new_result)
-                elif choice == 5:
+
+
+                elif choice == "5":
                     new_status = input("Enter new Test status: ")
                     while not validCheck.validStatus(new_status):
                         print("Wrong Test Status, please try again")
                         new_status = input("Enter new Test status: ")
                     record.setStatus(new_status)
-                elif choice == 6:
+                    changeResultDate(record)
+
+
+                elif choice == "6":
                     break
                 else:
                     print("Invalid choice, please try again.")
@@ -212,13 +230,71 @@ def updateMedicalRecord():
 
 
 def updateMedicalTest():
-    test_name = input("Enter the name of the medical test to update: ")
-    new_range = input("Enter the new range for the test (min,max): ")
-    min_range, max_range = map(int, new_range.split(','))
+    i =1
+    for test in medicalTests:
+        print(f"{i}. ",end="")
+        test.printMedicalTest()
+        i +=1
+
+    test_name = input("Enter the Abbreviation of the medical test you want to update: ")
 
     for test in medicalTests:
-        if test.getTestName() == test_name:
-            test.updateMedicalTest(test_name, [min_range, max_range])
+        if test.getAbbreviation() == test_name:
+            print("Enter a new test Name ( or press enter if you dont want to change )")
+            name = input()
+            if name == None:
+                name = test.test_name
+
+            print("Enter a new test abbreviation: ( or press enter if you dont want to change ) ")
+            abbreviation = input()
+            while (abbreviation != None and validCheck.validAbbreviation(abbreviation)):
+                print("this abbreviation already exists enter another abbreviation ( or press enter if you dont want to change ) ")
+                abbreviation = input()
+            if abbreviation == None:
+                abbreviation = test.abbreviation
+
+
+            print ("If you want to change the test range enter 1 or enter 0 if you dont want to change")
+            temp = input()
+
+            if temp == "1":
+                print("Enter new min range for the test")
+                min_range = input()
+                try:
+                    while min_range < 0:
+                        print("The range should be positive or enter 0 if you dont want a min range")
+                        min_range = input()
+                except:
+                    print("The range should be in numeric numbers only")
+
+
+                print("Enter a new max range for the test")
+                max_range = input()
+                try:
+                    while max_range < 0 or max_range < min_range:
+                        print("The range should be positive and bigger than min range or enter 0 if you dont want to put a max range")
+                        max_range = input()
+                except:
+                    print("The range should be in numeric numbers only")
+            else :
+                min_range = test.test_range[0]
+                max_range = test.test_range[1]
+
+            test_range = [min_range, max_range]
+
+            print("Enter a new unit for the test( or press enter if you dont want to change )")
+            unit = input()
+            if unit == None:
+                unit = test.unit
+
+            print("Enter the time to be completed for this medical test: (Form : DD-hh-mm) ( or press enter if you dont want to change )")
+            time_to_be_completed = input()
+            if(time_to_be_completed == None):
+                time_to_be_completed = test.time_to_be_completed
+
+
+            test.updateMedicalTest(name,abbreviation,test_range,unit,time_to_be_completed)
+
             print(f"Medical test '{test_name}' updated successfully.")
             return
 
@@ -353,7 +429,7 @@ def filterMedicalTests():
         if validCheck.validTestAbbreviation(medicalTests, test_abbreviation):
             for test in medicalTests:
                 if test.getAbbreviation() == test_abbreviation:
-                    print(test.printMedicalTest(mtClass.numberOfMedicalTests))
+                    print(test.printMedicalTest())
         else:
             print("No such test abbreviation")
 
@@ -367,13 +443,13 @@ def filterMedicalTests():
         for test in medicalTests:
             test_range = test.getRange()
             if (first_test_range <= test_range[0] and second_test_range >= test_range[1]):
-                print(test.printMedicalTest(mtClass.numberOfMedicalTests))
+                print(test.printMedicalTest())
 
     elif choice == "3":
         unit = input("Enter the unit: ")
         for test in medicalTests:
             if test.getUnit() == unit:
-                print(test.printMedicalTest(mtClass.numberOfMedicalTests))
+                print(test.printMedicalTest())
 
     elif choice == "4":
         print("Choose a filter for execution time:")
@@ -391,17 +467,17 @@ def filterMedicalTests():
 
                 if test_minutes is not None:
                     if sub_choice == "3" and test_minutes == execution_minutes:
-                        print(test.printMedicalTest(mtClass.numberOfMedicalTests))
+                        print(test.printMedicalTest())
                     elif sub_choice == "2" and test_minutes < execution_minutes:
-                        print(test.printMedicalTest(mtClass.numberOfMedicalTests))
+                        print(test.printMedicalTest())
                     elif sub_choice == "1" and test_minutes > execution_minutes:
-                        print(test.printMedicalTest(mtClass.numberOfMedicalTests))
+                        print(test.printMedicalTest())
         else:
             print("Invalid time format entered.")
 
     elif choice == "5":
         for test in medicalTests:
-            print(test.printMedicalTest(mtClass.numberOfMedicalTests))
+            print(test.printMedicalTest())
 
     elif choice == "6":
         return
@@ -587,3 +663,25 @@ def exportMedicalTests():
 
         for test in medicalTests:
             writer.writerow([test.test_name, test.abbreviation, test.test_range, test.unit, test.time_to_be_completed])
+
+
+def changeResultDate(record):
+    from datetime import datetime
+
+    if record.status != "Completed":
+        return
+
+    first = record.date
+    second = record.test.getTimeToBeCompleted()
+
+    first_datetime = datetime.strptime(first, "%Y-%m-%d %H:%M")
+    second_parts = second.split("-")
+    days = int(second_parts[0])
+    hours = int(second_parts[1])
+    minutes = int(second_parts[2])
+
+    from datetime import timedelta
+    second_datetime = timedelta(days=days, hours=hours, minutes=minutes)
+    result = first_datetime + second_datetime
+    result_date = result.strftime("%Y-%m-%d %H:%M")
+    record.result_date = result_date

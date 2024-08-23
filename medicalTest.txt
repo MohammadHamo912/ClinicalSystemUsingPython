@@ -6,5 +6,4 @@
 6. Name: Yanal is gentle (Yg); Range: < 80.0; Unit: mg, 01-02-00 
 7. Name: Yanal is khawal (Yk); Range: > 20.0, < 100.0; Unit: mg/dL, 0-5-1 
 8. Name: Hamo is strong (His); Range: > 30.0, < 35.0; Unit: liter, 1-0-0 
-9. Name: Yanal is lovely (YL); Range: > 50.0, ; Unit: yani, 0-0-0 
-10. Name: Hamo is king (HIK); Range: ; Unit: hamo, 0-0-0 
+9. Name: Yanal is lovely (YL); Range: > 50.0, ; Unit: yani, 0-0-01 
