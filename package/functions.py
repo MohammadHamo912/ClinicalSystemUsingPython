@@ -32,11 +32,19 @@ def addNewMedicalTest():
     abbreviation = input()
 
     print(
-        "Enter the min normal range of the medical test:(The range should be positive, if there is no min range enter -1 )")
-    min_range = input()
+        "Enter the min normal range of the medical test:(The range should be positive, if there is no min range enter 0 )")
+    min_range = float(input())
+    while (min_range < 0):
+        print("the range should be positive, if there is no min range enter 0")
+        min_range = float(input())
+
     print(
-        "Enter the max normal range of the medical test: (The range should be positive, if there is no max range enter -1 )")
-    max_range = input()
+        "Enter the max normal range of the medical test: (The range should be positive, if there is no max range enter 0 )")
+    max_range = float(input())
+
+    while (max_range < 0 or (max_range < min_range and max_range != 0)):
+        print("the max range should be positive and bigger than the min range, if there is no max range enter 0")
+        max_range = float(input())
 
     test_range = [min_range, max_range]
 
@@ -74,10 +82,8 @@ def addNewMedicalRecord():
     while True:
         try:
             if validCheck.validDate(date):
-                print("Valid Date")
                 break
             else:
-                print("Invalid Date")
                 date = input()
         except ValueError:
             print("Invalid date ")
@@ -96,7 +102,12 @@ def addNewMedicalRecord():
         status = input()
 
     unit = validCheck.getUnit(medicalTests, test_abbreviation)
-
+    for record in medicalRecords:
+        if (
+                record.patient_id == patient_id and record.test.getAbbreviation() == test_abbreviation and record.date == date and record.result == result
+                and record.status == status):
+            print("This record already exists")
+            return
     medical_record = mrClass.MedicalRecord(patient_id, patient_medical_test, date, result, unit, status)
     medicalRecords.append(medical_record)
     medical_record.addToMedicalRecord()
@@ -215,69 +226,115 @@ def updateMedicalTest():
 
 
 def filterMedicalRecords():
-    tempList = medicalRecords[:]
-
+    tempList = [medicalRecords,[],[],[],[],[],[]]
+    i =0
     while True:
         print("Choose the categories you would like to filter: ")
         print("1. Patient ID")
         print("2. Test Name")
-        print("3. Abnormal Test")
+        print("3. UpNormal Test")
         print("4. Specific Date")
         print("5. Test Status")
         print("6. Test turnaround time")  # Function not implemented yet
-        print("7. Exit Filter")
-        choice = int(input())
+        print("7. show all medical records")
+        print("8. Exit Filter")
+        choice = input()
 
-        if choice == 1:
+        if choice == ("1"):
             patient_id = input("Enter the patient ID: ")
             if validCheck.validPatientID(patient_id):
-                tempList = [record for record in tempList if record.patient_id == patient_id]
+                for record in tempList[i]:
+                    if record.patient_id == patient_id:
+                        tempList[i+1].append(record)
+                        print(record)
+
             else:
                 print("Invalid patient ID.")
                 continue
 
-        elif choice == 2:
+        elif choice == "2":
             test_name = input("Enter test name: ")
             if validCheck.validTestAbbreviation(medicalTests, test_name):
-                tempList = [record for record in tempList if record.test_name == test_name]
+                for record in tempList[i]:
+                    if record.test.getAbbreviation() == test_name:
+                        tempList[i + 1].append(record)
+                        print(record)
             else:
-                print("Invalid test name.")
+                print("Invalid test abbreviation.")
                 continue
 
-        elif choice == 3:
-            tempList = [record for record in tempList if validCheck.upNormalResult(mtClass.medicalTestNames, record.result, mtClass.medicalTestAbbreviations)]
+        elif choice == "3":
+            for record in tempList[i]:
+                if validCheck.upNormalResult(medicalTests, float(record.result), record.test.getAbbreviation()):
+                    tempList[i + 1].append(record)
+                    print(record)
 
-        elif choice == 4:
+
+        elif choice == "4":
+            from datetime import datetime
+
             start_date = input("Enter the start date of search (YYYY-MM-DD): ")
+            date_obj = datetime.strptime(start_date, "%Y-%m-%d")
+            start_date = date_obj.strftime("%Y-%m-%d %H:%M")
             end_date = input("Enter the end date of search (YYYY-MM-DD): ")
+            date_obj = datetime.strptime(end_date, "%Y-%m-%d")
+            end_date = date_obj.strftime("%Y-%m-%d %H:%M")
+
             if validCheck.validDate(start_date) and validCheck.validDate(end_date):
-                tempList = [record for record in tempList if start_date <= record.date <= end_date]
+                for record in tempList[i]:
+                    if start_date <= record.date <=end_date:
+                        tempList[i + 1].append(record)
+                        print(record)
             else:
                 print("Invalid date format.")
 
-        elif choice == 5:
+        elif choice == "5":
             test_status = input("Enter test status: ")
             if validCheck.validStatus(test_status):
-                tempList = [record for record in tempList if record.status == test_status]
+                for record in tempList[i]:
+                    if record.status == test_status:
+                        tempList[i + 1].append(record)
+                        print(record)
             else:
                 print("Invalid test status.")
                 continue
 
-        elif choice == 6:
-            print("Test turnaround time filtering not implemented yet.")
-            continue
+        elif choice == "6":
+            from datetime import datetime
 
-        elif choice == 7:
-            if tempList:
-                for record in tempList:
-                    print(record)
+            start_date = input("Enter the start date of search (YYYY-MM-DD): ")
+            date_obj = datetime.strptime(start_date, "%Y-%m-%d")
+            start_date = date_obj.strftime("%Y-%m-%d %H:%M")
+            end_date = input("Enter the end date of search (YYYY-MM-DD): ")
+            date_obj = datetime.strptime(end_date, "%Y-%m-%d")
+            end_date = date_obj.strftime("%Y-%m-%d %H:%M")
+
+            if validCheck.validDate(start_date) and validCheck.validDate(end_date):
+                for record in tempList[i]:
+                    if(record.status == "Completed"):
+                        if start_date <= record.result_date <= end_date:
+                            tempList[i + 1].append(record)
+                            print(record)
             else:
-                print("No records match the selected criteria.")
+                print("Invalid date format.")
+
+
+
+
+        elif choice == "7":
+            for record in medicalRecords:
+                print(record)
+
+
+        elif choice == "8":
             print("Exiting filter...")
+            tempList = [medicalRecords, [], [], [], []]
             return
 
         else:
             print("Invalid choice. Please try again.")
+
+        i+=1
 
 
 def filterMedicalTests():
@@ -286,41 +343,44 @@ def filterMedicalTests():
     print("2. Range")
     print("3. Unit of Test")
     print("4. Execution Time")
-    choice = int(input())
+    print("5. All medical tests")
+    print("6. exit")
+    choice = input()
 
-    if choice == 1:
+
+    if choice == "1":
         test_abbreviation = input("Enter the test abbreviation: ")
         if validCheck.validTestAbbreviation(medicalTests, test_abbreviation):
             for test in medicalTests:
                 if test.getAbbreviation() == test_abbreviation:
-                    print(mtClass.printMedicalTest(test))
+                    print(test.printMedicalTest(mtClass.numberOfMedicalTests))
         else:
             print("No such test abbreviation")
 
-    elif choice == 2:
+    elif choice == "2":
         first_input = input("Range is greater than or equal to (Leave empty if there is no lower limit): ")
         second_input = input("Range is less than or equal to (Leave empty if there is no upper limit): ")
 
-        first_test_range = float(first_input) if first_input else float('-inf')
-        second_test_range = float(second_input) if second_input else float('inf')
+        first_test_range = float(first_input) if first_input else float(0)
+        second_test_range = float(second_input) if second_input else float(0)
 
         for test in medicalTests:
             test_range = test.getRange()
             if (first_test_range <= test_range[0] and second_test_range >= test_range[1]):
-                print(mtClass.printMedicalTest(test))
+                print(test.printMedicalTest(mtClass.numberOfMedicalTests))
 
-    elif choice == 3:
+    elif choice == "3":
         unit = input("Enter the unit: ")
         for test in medicalTests:
             if test.getUnit() == unit:
-                print(mtClass.printMedicalTest(test))
+                print(test.printMedicalTest(mtClass.numberOfMedicalTests))
 
-    elif choice == 4:
+    elif choice == "4":
         print("Choose a filter for execution time:")
         print("1. More than a certain time")
         print("2. Less than a certain time")
         print("3. Equal to a certain time")
-        sub_choice = int(input())
+        sub_choice = input()
 
         execution_time = input("Enter the execution time (dd-hh-mm): ")
         execution_minutes = time_to_minutes(execution_time)
@@ -330,14 +390,24 @@ def filterMedicalTests():
                 test_minutes = time_to_minutes(test.getTimeToBeCompleted())
 
                 if test_minutes is not None:
-                    if sub_choice == 3 and test_minutes == execution_minutes:
-                        print(mtClass.printMedicalTest(test))
-                    elif sub_choice == 2 and test_minutes < execution_minutes:
-                        print(mtClass.printMedicalTest(test))
-                    elif sub_choice == 1 and test_minutes > execution_minutes:
-                        print(mtClass.printMedicalTest(test))
+                    if sub_choice == "3" and test_minutes == execution_minutes:
+                        print(test.printMedicalTest(mtClass.numberOfMedicalTests))
+                    elif sub_choice == "2" and test_minutes < execution_minutes:
+                        print(test.printMedicalTest(mtClass.numberOfMedicalTests))
+                    elif sub_choice == "1" and test_minutes > execution_minutes:
+                        print(test.printMedicalTest(mtClass.numberOfMedicalTests))
         else:
             print("Invalid time format entered.")
+
+    elif choice == "5":
+        for test in medicalTests:
+            print(test.printMedicalTest(mtClass.numberOfMedicalTests))
+
+    elif choice == "6":
+        return
+
+    else:
+        print("wrong choice")
 
 
 def time_to_minutes(time_str):
@@ -347,6 +417,7 @@ def time_to_minutes(time_str):
     except ValueError:
         print(f"Error: Invalid time format '{time_str}'. Expected format is 'dd-hh-mm'.")
         return None
+
 
 def deleteMedicalRecord():
     print("How would you like to delete a record:")
@@ -409,7 +480,8 @@ def deleteMedicalRecord():
         finish_date = input("Enter the end date for deletion (YYYY-MM-DD): ").strip()
 
         try:
-            updated_records = [record for record in medicalRecords if not (start_date <= record.date.split(' ')[0] <= finish_date)]
+            updated_records = [record for record in medicalRecords if
+                               not (start_date <= record.date.split(' ')[0] <= finish_date)]
             medicalRecords[:] = updated_records
             print(f"Records between dates '{start_date}' and '{finish_date}' have been deleted.")
         except ValueError:
@@ -429,14 +501,21 @@ def deleteMedicalRecord():
     for record in medicalRecords:
         print(record)
 
+
 def deleteMedicalTest():
-    test_abbreviation=input("Enter the test Abbreviation you want to delete: ")
+    test_abbreviation = input("Enter the test Abbreviation you want to delete: ")
     if validCheck.validTestAbbreviation(medicalTests, test_abbreviation):
         for test in medicalTests:
             if test.abbreviation == test_abbreviation:
                 medicalTests.remove(test)
+                mtClass.re
+                print("Test has been deleted.")
+
     else:
         print("That's not a valid test abbreviation")
+        return
+
+    importMedicalTests()
 
 
 def generateTextualSummary():
@@ -462,7 +541,6 @@ def exportMedicalRecords():
     print("Medical records exported successfully to 'medical_records.csv'")
 
 
-
 def importMedicalRecords():
     import csv
 
@@ -483,9 +561,6 @@ def importMedicalRecords():
     print("Medical records imported successfully from 'medical_records_import.csv'")
 
 
-
-
-
 def importMedicalTests():
     import csv
     import ast
@@ -503,14 +578,12 @@ def importMedicalTests():
             medical_test.addMedicalTest(mtClass.numberOfMedicalTests)
 
 
-
-
 def exportMedicalTests():
     import csv
 
     with open('medical_tests.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(['Name', 'Abbreviation','Range', 'Unit', 'Date'])
+        writer.writerow(['Name', 'Abbreviation', 'Range', 'Unit', 'Date'])
 
         for test in medicalTests:
-            writer.writerow([test.test_name, test.abbreviation,test.test_range, test.unit, test.time_to_be_completed])
+            writer.writerow([test.test_name, test.abbreviation, test.test_range, test.unit, test.time_to_be_completed])

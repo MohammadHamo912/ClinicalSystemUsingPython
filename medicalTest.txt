@@ -1,5 +1,10 @@
 1. Name: Hemoglobin (Hgb); Range: > 13.8, < 17.2; Unit: g/dL, 00-03-04 
 2. Name: Blood Glucose Test (BGT); Range: > 70.0, < 99.0; Unit: mg/dL, 00-12-06 
-3. Name: LDL Cholesterol Low-Density Lipoprotein (LDL); Range: > 0.0, < 100.0; Unit: mg/dL, 00-17-06 
-4. Name: Systolic Blood Pressure (systole); Range: > 0.0, < 120.0; Unit: mm Hg, 00-08-04 
-5. Name: Diastolic Blood Pressure (diastole); Range: > 0.0, < 80.0; Unit: mm Hg, 00-10-00 
+3. Name: LDL Cholesterol Low-Density Lipoprotein (LDL); Range: < 100.0; Unit: mg/dL, 00-17-06 
+4. Name: Systolic Blood Pressure (systole); Range: < 120.0; Unit: mm Hg, 00-08-04 
+5. Name: Diastolic Blood Pressure (diastole); Range: < 80.0; Unit: mm Hg, 00-10-00 
+6. Name: Yanal is gentle (Yg); Range: < 80.0; Unit: mg, 01-02-00 
+7. Name: Yanal is khawal (Yk); Range: > 20.0, < 100.0; Unit: mg/dL, 0-5-1 
+8. Name: Hamo is strong (His); Range: > 30.0, < 35.0; Unit: liter, 1-0-0 
+9. Name: Yanal is lovely (YL); Range: > 50.0, ; Unit: yani, 0-0-0 
+10. Name: Hamo is king (HIK); Range: ; Unit: hamo, 0-0-0 

@@ -19,11 +19,11 @@ class MedicalTest:
             f"{numberOfMedicalTests}. Name: {self.test_name} ({self.abbreviation}); Range: ")
 
 
-        if int(self.test_range[0]) != -1:
+        if int(self.test_range[0]) != 0:
             open_medical_test_file.write(
                 f"> {self.test_range[0]}, ")
 
-        if int(self.test_range[1]) != -1:
+        if int(self.test_range[1]) != 0:
             open_medical_test_file.write(
                 f"< {self.test_range[1]}"
             )
@@ -34,8 +34,17 @@ class MedicalTest:
 
 
 
-    def printMedicalTest(self):
-        print(self.test_name, self.abbreviation, self.test_range, self.unit, self.time_to_be_completed)
+    def printMedicalTest(self ,numberOfMedicalTests):
+        print(f"{numberOfMedicalTests}. Name: {self.test_name} ({self.abbreviation}); Range:",end = " ")
+
+        if int(self.test_range[0]) != 0:
+            print(
+                f"> {self.test_range[0]},",end = " ")
+
+        if int(self.test_range[1]) != 0:
+            print(f"< {self.test_range[1]}",end = "")
+
+        print(f"; Unit: {self.unit}, {self.time_to_be_completed} \n")
 
     def updateMedicalTest(self, testName, newRange):
         read_medical_tests = open("medicalTest.txt", "r")

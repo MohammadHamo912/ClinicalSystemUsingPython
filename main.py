@@ -45,7 +45,7 @@ def menu():
         elif choice == 0:
             break
         else:
-            break
+            print("Invalid choice")
 
 
 menu()
