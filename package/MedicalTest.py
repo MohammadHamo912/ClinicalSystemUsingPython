@@ -47,6 +47,9 @@ class MedicalTest:
 
         print(f"; Unit: {self.unit}, {self.time_to_be_completed} \n")
 
+
+
+
     def updateMedicalTest(self, test_name, abbreviation, test_range, unit, time_to_be_completed):
         self.test_name = test_name
         self.abbreviation = abbreviation
@@ -63,6 +66,9 @@ class MedicalTest:
 #            if not line.startswith(testName):
 #                writeMedicalTest.write(line)
 
+
+    def getTestName(self):
+        return self.test_name
     def getAbbreviation(self):
         return self.abbreviation
 

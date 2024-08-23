@@ -6,5 +6,4 @@ Systolic Blood Pressure,systole,"[0.0, 120.0]",mm Hg,00-08-04
 Diastolic Blood Pressure,diastole,"[0.0, 80.0]",mm Hg,00-10-00
 Yanal is gentle,Yg,"[0.0, 80.0]",mg,01-02-00
 Yanal is khawal,Yk,"[20.0, 100.0]",mg/dL,0-5-1
-Hamo is strong,His,"[30.0, 35.0]",liter,1-0-0
 Yanal is lovely,YL,"[50.0, 0.0]",yani,0-0-01

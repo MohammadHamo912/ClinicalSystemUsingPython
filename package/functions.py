@@ -240,18 +240,18 @@ def updateMedicalTest():
 
     for test in medicalTests:
         if test.getAbbreviation() == test_name:
-            print("Enter a new test Name ( or press enter if you dont want to change )")
+            print("Enter a new test Name ( or enter 0 if you dont want to change )")
             name = input()
-            if name == None:
-                name = test.test_name
+            if name == "0":
+                name = test.getTestName()
 
             print("Enter a new test abbreviation: ( or press enter if you dont want to change ) ")
             abbreviation = input()
-            while (abbreviation != None and validCheck.validAbbreviation(abbreviation)):
-                print("this abbreviation already exists enter another abbreviation ( or press enter if you dont want to change ) ")
+            while (abbreviation != None and validCheck.validTestAbbreviation(medicalTests,abbreviation)):
+                print("this abbreviation already exists enter another abbreviation ( or enter 0if you dont want to change ) ")
                 abbreviation = input()
-            if abbreviation == None:
-                abbreviation = test.abbreviation
+            if abbreviation == "0":
+                abbreviation = test.getAbbreviation()
 
 
             print ("If you want to change the test range enter 1 or enter 0 if you dont want to change")
@@ -277,20 +277,20 @@ def updateMedicalTest():
                 except:
                     print("The range should be in numeric numbers only")
             else :
-                min_range = test.test_range[0]
-                max_range = test.test_range[1]
+                min_range = test.getRange()[0]
+                max_range = test.getRange()[1]
 
             test_range = [min_range, max_range]
 
-            print("Enter a new unit for the test( or press enter if you dont want to change )")
+            print("Enter a new unit for the test( or enter 0 if you dont want to change )")
             unit = input()
-            if unit == None:
-                unit = test.unit
+            if unit == "0":
+                unit = test.getUnit()
 
-            print("Enter the time to be completed for this medical test: (Form : DD-hh-mm) ( or press enter if you dont want to change )")
+            print("Enter the time to be completed for this medical test: (Form : DD-hh-mm) ( or enter 0 if you dont want to change )")
             time_to_be_completed = input()
-            if(time_to_be_completed == None):
-                time_to_be_completed = test.time_to_be_completed
+            if(time_to_be_completed == "0"):
+                time_to_be_completed = test.getTimeToBeCompleted()
 
 
             test.updateMedicalTest(name,abbreviation,test_range,unit,time_to_be_completed)
@@ -581,18 +581,32 @@ def deleteMedicalRecord():
 def deleteMedicalTest():
     test_abbreviation = input("Enter the test Abbreviation you want to delete: ")
     if validCheck.validTestAbbreviation(medicalTests, test_abbreviation):
-        for test in medicalTests:
-            if test.abbreviation == test_abbreviation:
-                medicalTests.remove(test)
-                mtClass.re
-                print("Test has been deleted.")
+        print ("Deleting the medical test will lead to delete all the records for it")
+        confirm = input("Are you sure you want to delete this test? (yes/no): ").strip().lower()
+        if confirm == "yes":
+
+            updated_records = [record for record in medicalRecords if
+                               record.test.getAbbreviation().lower() != test_abbreviation]
+            medicalRecords[:] = updated_records
+            print(f"Records with test name '{test_abbreviation}' have been deleted.")
+
+            for test in medicalTests:
+                if test.abbreviation == test_abbreviation:
+                    medicalTests.remove(test)
+                    print("Test has been deleted.")
+
+
+        else:
+            print("Deletion canceled.")
+            return
 
     else:
         print("That's not a valid test abbreviation")
         return
 
-    importMedicalTests()
 
+    medicalSystemShutDown()
+    medicalSystemSetUP()
 
 def generateTextualSummary():
     with open("summary_report.txt", "w") as file:
