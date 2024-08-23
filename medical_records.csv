@@ -7,6 +7,4 @@ Patient ID,Test,Date,Result,Unit,Status
 1234567,Hgb,2020-01-01 1:1,22,g/dL,Completed
 7894561,LDL,2022-12-12 12:15,0,mg/dL,Completed
 6547893,LDL,2016-05-1 0:0,90,mg/dL,Pending
-7894563,Yk,2020-1-1 0:0,70,mg/dL,Completed
-1234567,Yk,2012-05-19 20:15,60,liter,Completed
-1234567,Yig,2015-06-09 0:0,80,mg,Completed
+4445556,Hgb,2019-03-03 00:00,40,g/dL,Completed

@@ -311,7 +311,7 @@ def filterMedicalRecords():
         print("3. UpNormal Test")
         print("4. Specific Date")
         print("5. Test Status")
-        print("6. Test turnaround time")  # Function not implemented yet
+        print("6. Test turnaround time")
         print("7. show all medical records")
         print("8. Exit Filter")
         choice = input()
@@ -422,7 +422,6 @@ def filterMedicalTests():
     print("5. All medical tests")
     print("6. exit")
     choice = input()
-
 
     if choice == "1":
         test_abbreviation = input("Enter the test abbreviation: ")
@@ -605,17 +604,6 @@ def deleteMedicalTest():
         return
 
 
-    medicalSystemShutDown()
-    medicalSystemSetUP()
-
-def generateTextualSummary():
-    with open("summary_report.txt", "w") as file:
-        for record in medicalRecords:
-            file.write(f"Patient ID: {record.patient_id}, Test: {record.test.getAbbreviation()}, Date: {record.date}, "
-                       f"Result: {record.result} {record.unit}, Status: {record.status}\n")
-
-    print("Summary report generated")
-
 
 def exportMedicalRecords():
     import csv
@@ -701,121 +689,152 @@ def changeResultDate(record):
     record.result_date = result_date
 
 
-def generateSummaryReports(all_tests):
-    def get_summary_criteria():
+def generateSummaryReports():
+
+    tempList = [medicalRecords, [], [], [], [], [], []]
+    i = 0
+    while True:
+
         print("Select criteria for generating the summary report:")
-        print("1 - By Test Name")
-        print("2 - By Abnormality")
-        print("3 - By Status")
+        print("1. Patient ID")
+        print("2. Test Name")
+        print("3. UpNormal Test")
+        print("4. Specific Date")
+        print("5. Test Status")
+        print("6. Test turnaround time")
+        print("7. show all medical records")
+        print("8. generate the summary report for test results")
+        print("9. generate the summary report for turnaround time")
+        print("10. Exit")
+        choice = input("Enter your choice : ")
 
-        choice = input("Enter your choice (1/2/3): ")
-        if choice not in ['1', '2', '3']:
-            print("Invalid choice. Defaulting to all criteria.")
-            choice = '1'
-        return choice
 
-    def filter_tests(tests, criteria, value=None):
-        if criteria == '1':
-            if value:
-                return [test for test in tests if mtClass.getTestName(test) == value]
-            return tests
-        elif criteria == '2':
-            if value is not None:
-                return [test for test in tests if validCheck.upNormalResult(test) == value]
-            return tests
-        elif criteria == '3':
-            if value:
-                return [test for test in tests if test.getStatus() == value]
-            return tests
-        return tests
+        if choice == ("1"):
+            patient_id = input("Enter the patient ID: ")
+            if validCheck.validPatientID(patient_id):
+                for record in tempList[i]:
+                    if record.patient_id == patient_id:
+                        tempList[i + 1].append(record)
+                        print(record)
 
-    criteria = get_summary_criteria()
+            else:
+                print("Invalid patient ID.")
+                continue
 
-    value = None
-    if criteria in ['1', '3']:
-        value = input("Enter the value to filter by: ")
+        elif choice == "2":
+            test_name = input("Enter test name: ")
+            if validCheck.validTestAbbreviation(medicalTests, test_name):
+                for record in tempList[i]:
+                    if record.test.getAbbreviation() == test_name:
+                        tempList[i + 1].append(record)
+                        print(record)
+            else:
+                print("Invalid test abbreviation.")
+                continue
 
-    filtered_tests = filter_tests(all_tests, criteria, value)
+        elif choice == "3":
+            for record in tempList[i]:
+                if validCheck.upNormalResult(medicalTests, float(record.result), record.test.getAbbreviation()):
+                    tempList[i + 1].append(record)
+                    print(record)
 
-    if not filtered_tests:
-        print("No records found to generate a summary.")
-        return
 
-    min_values = {}
-    max_values = {}
-    total_values = {}
-    counts = {}
+        elif choice == "4":
+            from datetime import datetime
 
-    min_times = {}
-    max_times = {}
-    total_times = {}
+            start_date = input("Enter the start date of search (YYYY-MM-DD): ")
+            date_obj = datetime.strptime(start_date, "%Y-%m-%d")
+            start_date = date_obj.strftime("%Y-%m-%d %H:%M")
+            end_date = input("Enter the end date of search (YYYY-MM-DD): ")
+            date_obj = datetime.strptime(end_date, "%Y-%m-%d")
+            end_date = date_obj.strftime("%Y-%m-%d %H:%M")
 
-    abnormal_count = {'Abnormal': 0, 'Normal': 0}
-    status_count = {}
+            if validCheck.validDate(start_date) and validCheck.validDate(end_date):
+                for record in tempList[i]:
+                    if start_date <= record.date <= end_date:
+                        tempList[i + 1].append(record)
+                        print(record)
+            else:
+                print("Invalid date format.")
 
-    for test in filtered_tests:
-        test_name = test.getTestName()
-        abnormal = test.isAbnormal()
-        status = test.getStatus()
+        elif choice == "5":
+            test_status = input("Enter test status: ")
+            if validCheck.validStatus(test_status):
+                for record in tempList[i]:
+                    if record.status == test_status:
+                        tempList[i + 1].append(record)
+                        print(record)
+            else:
+                print("Invalid test status.")
+                continue
 
-        # Initialize dictionaries for new criteria
-        if test_name not in min_values:
-            min_values[test_name] = float('inf')
-            max_values[test_name] = float('-inf')
-            total_values[test_name] = 0
-            counts[test_name] = 0
+        elif choice == "6":
+            from datetime import datetime
 
-        if test_name not in min_times:
-            min_times[test_name] = float('inf')
-            max_times[test_name] = float('-inf')
-            total_times[test_name] = 0
+            start_date = input("Enter the start date of search (YYYY-MM-DD): ")
+            date_obj = datetime.strptime(start_date, "%Y-%m-%d")
+            start_date = date_obj.strftime("%Y-%m-%d %H:%M")
+            end_date = input("Enter the end date of search (YYYY-MM-DD): ")
+            date_obj = datetime.strptime(end_date, "%Y-%m-%d")
+            end_date = date_obj.strftime("%Y-%m-%d %H:%M")
 
-        test_range = test.getRange()
-        test_value = test_range[0] if test_range[0] != 0 else test_range[1]
-        min_values[test_name] = min(min_values[test_name], test_value)
-        max_values[test_name] = max(max_values[test_name], test_value)
-        total_values[test_name] += test_value
-        counts[test_name] += 1
+            if validCheck.validDate(start_date) and validCheck.validDate(end_date):
+                for record in tempList[i]:
+                    if (record.status == "Completed"):
+                        if start_date <= record.result_date <= end_date:
+                            tempList[i + 1].append(record)
+                            print(record)
+            else:
+                print("Invalid date format.")
 
-        test_time = time_to_minutes(test.getTimeToBeCompleted())
-        min_times[test_name] = min(min_times[test_name], test_time)
-        max_times[test_name] = max(max_times[test_name], test_time)
-        total_times[test_name] += test_time
 
-        # Update abnormality counts
-        if abnormal:
-            abnormal_count['Abnormal'] += 1
+
+
+        elif choice == "7":
+            for record in medicalRecords:
+                print(record)
+
+
+        elif choice == "8":
+            min_value = float(tempList[i][0].result)
+            max_value = float(tempList[i ][1].result)
+            sum_results=0.0
+            count_results=0.0
+            for record in tempList[i]:
+                record_result = float(record.result)
+                if record_result <  min_value:
+                    min_value = record_result
+
+                if max_value < record_result:
+                    max_value = record_result
+
+                count_results +=1
+                sum_results += record_result
+
+
+            if max_value == 0.0:
+                max_value = "There is no max value"
+            print("--------------------------------------------")
+            print("Min value in this criteria : ", min_value)
+            print("Max value in this criteria : ", max_value)
+            print("Average value in this criteria", sum_results/count_results)
+            print("--------------------------------------------")
+            return
+
+        elif choice == "9":
+           print("generating is not ready")
+
+
+        elif choice == "10":
+            "Exiting filter..."
         else:
-            abnormal_count['Normal'] += 1
+            print("Invalid choice. Please try again.")
 
-        # Update status counts
-        if status in status_count:
-            status_count[status] += 1
-        else:
-            status_count[status] = 1
+        i += 1
 
-    # Print results
-    print("\nSummary Report:")
-    for test_name in min_values:
-        average_value = total_values[test_name] / counts[test_name]
-        average_time = total_times[test_name] / counts[test_name]
 
-        print(f"\nTest Name: {test_name}")
-        print(f"Minimum Test Value: {min_values[test_name]}")
-        print(f"Maximum Test Value: {max_values[test_name]}")
-        print(f"Average Test Value: {average_value:.2f}")
 
-        print(f"Minimum Turnaround Time: {minutes_to_time(min_times[test_name])}")
-        print(f"Maximum Turnaround Time: {minutes_to_time(max_times[test_name])}")
-        print(f"Average Turnaround Time: {minutes_to_time(average_time)}")
 
-    print("\nAbnormality Summary:")
-    print(f"Abnormal Tests: {abnormal_count['Abnormal']}")
-    print(f"Normal Tests: {abnormal_count['Normal']}")
-
-    print("\nStatus Summary:")
-    for status, count in status_count.items():
-        print(f"Status: {status} - Count: {count}")
 
 def minutes_to_time(minutes):
     days = minutes // (24 * 60)
